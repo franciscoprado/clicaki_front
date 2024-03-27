@@ -1,35 +1,8 @@
-body,
-ul,
-li {
-  font-family: "Ubuntu", sans-serif;
-  box-sizing: border-box;
-  margin: 0;
-  padding: 0;
+.title {
+  justify-self: center;
 }
 
-button {
-  font-family: "Ubuntu", sans-serif;
-  padding: 5px 10px;
-  border-radius: 5px;
-}
-
-input {
-  font-family: "Ubuntu", sans-serif;
-  padding: 5px 10px;
-}
-
-.hidden {
-  display: none !important;
-}
-
-header {
-  background-color: rgb(2, 102, 141);
-  text-align: center;
-  position: relative;
-  width: 100%;
-}
-
-#userFormWrapper {
+#userFormModal {
   position: fixed;
   display: flex;
   justify-content: center;
@@ -43,7 +16,9 @@ header {
 }
 
 .userFormContainer {
-  width: 25vw;
+  width: 50vw;
+  max-width: 320px;
+  min-width: 250px;
   display: flex;
   flex-direction: column;
   text-align: center;
@@ -51,6 +26,7 @@ header {
   border: solid 1px;
   padding: 1rem;
   background-color: white;
+  border-color: #888888;
   border-radius: 5px;
   box-shadow: 5px 5px 8px #888888;
 }

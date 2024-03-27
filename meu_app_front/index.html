@@ -11,6 +11,7 @@
   <link
     href="https://fonts.googleapis.com/css2?family=Ubuntu:ital,wght@0,300;0,400;0,500;0,700;1,300;1,400;1,500;1,700&display=swap"
     rel="stylesheet">
+  <link rel="stylesheet" href="base.css" />
   <link rel="stylesheet" href="styles.css" />
 
   <title>Climaki</title>
@@ -18,16 +19,18 @@
 
 <body>
   <!-- Cabeçalho de informações do sistema -->
-  <header>
-    <div class="title">
-      <h1>Climaki</h1>
-    </div>
+  <header class="flex flex-row align-items-center space-between">
+    <h1 class="width-100 margin-0">Climaki</h1>
+    <a id="loginLink" href="javascript:void(0)" onclick="toggleModal()">Login</a>
   </header>
 
   <!-- Opções para adicionar um novo usuário -->
-  <div id="userFormWrapper">
+  <div id="userFormModal">
     <section id="loginFormContainer" class="userFormContainer">
-      <h2>Entre</h2>
+      <header class="flex flex-row align-items-center space-between">
+        <h3 class="width-100 margin-0">Acesso</h3>
+        <a href="javascript:void(0)" onclick="toggleModal()">X</a>
+      </header>
       <form id="loginForm" action="" onsubmit="onFormSubmit(event)">
         <p>
           <input type="nome" name="nome" class="hidden" placeholder="Nome" />
