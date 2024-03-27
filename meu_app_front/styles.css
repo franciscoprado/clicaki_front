@@ -1,0 +1,56 @@
+body,
+ul,
+li {
+  font-family: "Ubuntu", sans-serif;
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+button {
+  font-family: "Ubuntu", sans-serif;
+  padding: 5px 10px;
+  border-radius: 5px;
+}
+
+input {
+  font-family: "Ubuntu", sans-serif;
+  padding: 5px 10px;
+}
+
+.hidden {
+  display: none !important;
+}
+
+header {
+  background-color: rgb(2, 102, 141);
+  text-align: center;
+  position: relative;
+  width: 100%;
+}
+
+#userFormWrapper {
+  position: fixed;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.3);
+}
+
+.userFormContainer {
+  width: 25vw;
+  display: flex;
+  flex-direction: column;
+  text-align: center;
+  align-content: space-around;
+  border: solid 1px;
+  padding: 1rem;
+  background-color: white;
+  border-radius: 5px;
+  box-shadow: 5px 5px 8px #888888;
+}
