@@ -150,9 +150,11 @@ const insertList = (nameProduct, quantity, price) => {
 */
 let loginMode = true;
 const nameInput = document.querySelector("input[name=nome]");
-const confirmPasswordInput = document.querySelector("input[name=confirmar_senha]");
+const confirmPasswordInput = document.querySelector(
+  "input[name=confirmar_senha]"
+);
 const registerLink = document.querySelector("#registerLink");
-const addBtn = document.querySelector(".addBtn");
+const formButton = document.querySelector("#formButton");
 
 /*
   --------------------------------------------------------------------------------------
@@ -161,30 +163,15 @@ const addBtn = document.querySelector(".addBtn");
 */
 const toggleForm = () => {
   const form = document.forms["loginForm"];
+  
   loginMode = !loginMode;
   nameInput.classList.toggle("hidden");
   confirmPasswordInput.classList.toggle("hidden");
+  nameInput.toggleAttribute("required");
+  confirmPasswordInput.toggleAttribute("required");
+  registerLink.textContent = loginMode ? "Não tenho cadastro" : "Fazer login";
+  formButton.textContent = loginMode ? "Login" : "Cadastrar";
   form.reset();
-  
-  if (!loginMode) {
-    showRegisterForm();
-  } else {
-    showLoginForm();
-  }
-};
-
-const showRegisterForm = () => {
-  registerLink.textContent = "Fazer login";
-  addBtn.textContent = "Cadastrar";
-  nameInput.setAttribute("required", "required");
-  confirmPasswordInput.setAttribute("required", "required");
-};
-
-const showLoginForm = () => {
-  registerLink.textContent = "Não tenho cadastro";
-  addBtn.textContent = "Login";
-  nameInput.removeAttribute("required");
-  confirmPasswordInput.removeAttribute("required");
 };
 
 /*
@@ -193,13 +180,14 @@ const showLoginForm = () => {
   --------------------------------------------------------------------------------------
 */
 const onFormSubmit = (e) => {
-  let url = loginMode
-    ? "http://127.0.0.1:5000/login"
-    : "http://127.0.0.1:5000/cadastro";
+  let acao = loginMode ? "login" : "cadastro";
   const form = document.forms["loginForm"];
 
   e.preventDefault();
-  fetch(url, { method: "post", body: new FormData(form) })
+  fetch(`http://127.0.0.1:5000/${acao}`, {
+    method: "post",
+    body: new FormData(form),
+  })
     .then((response) => {
       response.json().then((json) => {
         if (response.status != 200) {
