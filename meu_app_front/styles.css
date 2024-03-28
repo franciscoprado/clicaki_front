@@ -1,7 +1,3 @@
-.title {
-  justify-self: center;
-}
-
 #userFormModal {
   position: fixed;
   display: flex;
@@ -29,4 +25,57 @@
   border-color: #888888;
   border-radius: 5px;
   box-shadow: 5px 5px 8px #888888;
+}
+
+#bookmarksMenu {
+  position: fixed;
+  box-sizing: border-box;
+  width: 220px;
+  height: 100vh;
+  border-right: solid 1px #ccc;
+  background-color: white;
+  padding: 5px;
+}
+
+#bookmarksMenu button {
+  position: absolute;
+  top: 20px;
+  left: 219px;
+  background-color: white;
+  border-left: none;
+  border-top: solid 1px #ccc;
+  border-right: solid 1px #ccc;
+  border-bottom: solid 1px #ccc;
+  border-top-left-radius: 0%;
+  border-bottom-left-radius: 0%;
+  cursor: pointer;
+}
+
+#bookmarksMenu ul {
+  margin: 0;
+  padding: 5px;
+  list-style: none;
+}
+
+#bookmarksMenu li {
+  border: solid 1px #ccc;
+  margin: 0 0 5px;
+  padding: 5px;
+}
+
+#addButton {
+  position: fixed;
+  bottom: 25px;
+  right: 25px;
+  border-color: red;
+  border-radius: 100px;
+  width: 50px;
+  height: 50px;
+  background-color: red;
+  color: white;
+  cursor: pointer;
+}
+
+#addButton:hover {
+  background-color: rgb(255, 85, 85)
 }

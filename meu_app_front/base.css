@@ -1,6 +1,4 @@
-body,
-ul,
-li {
+body {
   font-family: "Ubuntu", sans-serif;
   box-sizing: border-box;
   margin: 0;
@@ -12,6 +10,7 @@ button {
   font-size: 1rem;
   padding: 5px 10px;
   border-radius: 5px;
+  cursor: pointer;
 }
 
 input {

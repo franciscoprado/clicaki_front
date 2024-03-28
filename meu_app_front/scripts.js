@@ -52,6 +52,8 @@ const onFormSubmit = (e) => {
         }
 
         console.log(json);
+        localStorage.setItem("token", json.token);
+        toggleModal();
       });
     })
     .catch((error) => {
@@ -85,3 +87,19 @@ const toggleModal = () => {
 
   modal.classList.toggle("hidden");
 };
+
+/*
+  --------------------------------------------------------------------------------------
+  Função para iniciar aplicação
+  --------------------------------------------------------------------------------------
+*/
+const initApp = () => {
+  console.log("Inicializando app...");
+  let token = localStorage.getItem("token");
+
+  if (!token) {
+    toggleModal();
+  }
+};
+
+initApp();
