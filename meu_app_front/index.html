@@ -20,24 +20,56 @@
 
 <body>
   <!-- Cabeçalho de informações do sistema -->
-  <header class="flex flex-row align-items-center space-between">
+  <header class="top-header flex flex-row align-items-center space-between">
     <h1 class="width-100 margin-0">Climaki</h1>
-    <a id="loginLink" href="javascript:void(0)" onclick="toggleModal()">Login</a>
-    <a id="logoutLink" class="hidden" href="javascript:void(0)" onclick="logout()">Sair</a>
+    <nav>
+      <ul class="list-no-style">
+        <li>
+          <a id="loginLink" href="javascript:void(0)" onclick="toggleModal('userFormModal')
+          ">Login</a>
+        </li>
+        <li>
+          <a id="logoutLink" class="hidden" href="javascript:void(0)" onclick="logout()">Sair</a>
+        </li>
+      </ul>
+    </nav>
   </header>
 
+  <article id="tabs">
+    <header>
+      <nav>
+        <ul class="list-no-style inline-block padding-0">
+          <li class="active">
+            <a id="latestAdded" href="javascript:void(0)" onclick="toggleTab(event)">
+              Últimos adicionados
+            </a>
+          </li>
+          <li>
+            <a id="yourBookmarks" href="javascript:void(0)" onclick="toggleTab(event)">
+              Seus favoritos
+            </a>
+          </li>
+        </ul>
+      </nav>
+    </header>
+
+    <section>
+      <ul id="tabContent"></ul>
+    </section>
+  </article>
+
   <!-- Opções para adicionar um novo usuário -->
-  <div id="userFormModal" class="hidden">
-    <section id="loginFormContainer" class="userFormContainer">
+  <div id="userFormModal" class="modal hidden">
+    <section id="loginFormContainer" class="formContainer">
       <header class="flex flex-row align-items-center space-between">
         <h3 class="width-100 margin-0">Acesso</h3>
-        <a href="javascript:void(0)" onclick="toggleModal()">
+        <a href="javascript:void(0)" onclick="toggleModal('userFormModal')">
           <span class="material-symbols-outlined">close</span>
         </a>
       </header>
-      <form id="loginForm" action="" onsubmit="onFormSubmit(event)">
+      <form id="loginForm" action="" onsubmit="onLoginFormSubmit(event)">
         <p>
-          <input type="nome" name="nome" class="hidden" placeholder="Nome" />
+          <input type="text" name="nome" class="hidden" placeholder="Nome" />
         </p>
         <p>
           <input type="email" name="email" placeholder="E-mail" required />
@@ -59,18 +91,31 @@
     </section>
   </div>
 
-  <aside id="bookmarksMenu">
-    <button class="fixed">
-      <span class="material-symbols-outlined">
-        menu_open
-      </span>
-    </button>
-    <ul>
-      <li>Cidade 1</li>
-    </ul>
-  </aside>
+  <div id="bookmarkFormModal" class="modal hidden">
+    <section id="searchFormContainer" class="formContainer">
+      <header class="flex flex-row align-items-center space-between">
+        <h3 class="width-100 margin-0">Adicionar favorito</h3>
+        <a href="javascript:void(0)" onclick="toggleModal('bookmarkFormModal')">
+          <span class="material-symbols-outlined">close</span>
+        </a>
+      </header>
+      <form id="addBookmarkForm" action="" onsubmit="onBookmarkFormSubmit(event)">
+        <p>
+          <input type="url" name="url" placeholder="https://www.seulink.com" required />
+        </p>
+        <hr>
+        <p>
+          <input type="text" name="titulo" placeholder="Título do link" required />
+        </p>
+        <p>
+          <textarea name="descricao" placeholder="Descrição do link" rows="4"></textarea>
+        </p>
+        <button type="submit">Adicionar</button>
+      </form>
+    </section>
+  </div>
 
-  <button id="addButton">
+  <button id="addBookmarkButton" onclick="toggleModal('bookmarkFormModal')">
     <span class="material-symbols-outlined">
       add
     </span>

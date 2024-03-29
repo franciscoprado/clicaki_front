@@ -13,23 +13,28 @@ button {
   cursor: pointer;
 }
 
-input {
+a {
+  text-decoration: none;
+}
+
+a:hover,
+a:focus {
+  text-decoration: underline;
+}
+
+input,
+textarea {
   font-family: "Ubuntu", sans-serif;
   padding: 5px 10px;
-  max-width: 80%;
+  width: 90%;
 }
 
 .hidden {
   display: none !important;
 }
 
-header {
-  display: flex;
-  box-sizing: border-box;
-  text-align: center;
-  position: relative;
-  padding: 5px 10px;
-  border-bottom: solid 1px #ccc;
+.list-no-style {
+  list-style: none;
 }
 
 .flex {
@@ -63,4 +68,8 @@ header {
 
 .padding-0 {
   padding: 0;
+}
+
+.inline-block {
+  display: flex;
 }

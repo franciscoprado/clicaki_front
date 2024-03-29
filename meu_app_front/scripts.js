@@ -4,6 +4,7 @@
   --------------------------------------------------------------------------------------
 */
 let loginMode = true;
+let isLoading = false;
 const url = "http://127.0.0.1:5000";
 const nameInput = document.querySelector("input[name=nome]");
 const confirmPasswordInput = document.querySelector(
@@ -35,7 +36,7 @@ const toggleForm = () => {
   Função para fazer login
   --------------------------------------------------------------------------------------
 */
-const onFormSubmit = (e) => {
+const onLoginFormSubmit = (e) => {
   let acao = loginMode ? "login" : "cadastro";
   const form = document.forms["loginForm"];
 
@@ -53,8 +54,35 @@ const onFormSubmit = (e) => {
 
         console.log(json);
         localStorage.setItem("token", json.token);
-        toggleModal();
+        toggleModal("userFormModal");
       });
+    })
+    .catch((error) => {
+      console.log(error);
+    });
+};
+
+/*
+  --------------------------------------------------------------------------------------
+  Função para submeter o formulário e cadastrar favorito
+  --------------------------------------------------------------------------------------
+*/
+const onBookmarkFormSubmit = (e) => {
+  const form = document.forms["addBookmarkForm"];
+
+  e.preventDefault();
+
+  fetch(`${url}/favorito`, {
+    method: "post",
+    body: new FormData(form),
+    headers: {
+      Token: localStorage.getItem("token"),
+    },
+  })
+    .then((response) => response.json())
+    .then((json) => {
+      loadLatestAdded();
+      toggleModal("bookmarkFormModal");
     })
     .catch((error) => {
       console.log(error);
@@ -82,10 +110,94 @@ const validatePassword = () => {
   Função para fechar/abrir a modal de login
   --------------------------------------------------------------------------------------
 */
-const toggleModal = () => {
-  const modal = document.querySelector("#userFormModal");
+const toggleModal = (modalId) => {
+  const modal = document.querySelector(`#${modalId}`);
 
   modal.classList.toggle("hidden");
+};
+
+/*
+  --------------------------------------------------------------------------------------
+  Função para alternar as abas
+  --------------------------------------------------------------------------------------
+*/
+const toggleTab = (event) => {
+  const link = event.target;
+  const parent = link.parentElement;
+  const ulElement = link.parentElement.parentElement;
+
+  if (parent.classList.contains("active")) return;
+
+  for (const child of ulElement.children) {
+    child.classList.toggle("active");
+  }
+
+  link.id === "yourBookmarks" ? loadYourBookmarks() : loadLatestAdded();
+};
+
+/*
+  --------------------------------------------------------------------------------------
+  Função para carregar os favoritos adicionados mais recentemente
+  --------------------------------------------------------------------------------------
+*/
+const loadLatestAdded = () => {
+  clearTab();
+  fetch(`${url}/favoritos`)
+    .then((response) => response.json())
+    .then((json) => {
+      json["favoritos"].forEach((bookmark) => {
+        insertBookmark(bookmark);
+      });
+    })
+    .catch((error) => {
+      console.log(error);
+    });
+};
+
+/*
+  --------------------------------------------------------------------------------------
+  Função para limpar as abas de conteúdo anterior.
+  --------------------------------------------------------------------------------------
+*/
+const clearTab = () => {
+  const tabContent = document.querySelector("#tabContent");
+
+  tabContent.innerHTML = "";
+};
+
+/*
+  --------------------------------------------------------------------------------------
+  Função para inserir um favorito na lista
+  --------------------------------------------------------------------------------------
+*/
+const insertBookmark = (bookmark) => {
+  const tabContent = document.querySelector("#tabContent");
+  const bookmarkCard = document.createElement("li");
+  const bookmarkDate = document.createElement("time");
+  const bookmarkLink = document.createElement("a");
+  const bookmarkTitle = document.createElement("h2");
+  const date = new Date(bookmark.data_insercao);
+
+  bookmarkDate.textContent = `adicionado em ${date.toLocaleDateString()}`;
+  bookmarkTitle.textContent = bookmark.titulo;
+  bookmarkLink.textContent = bookmark.url;
+  bookmarkDate.setAttribute("datetime", date.toISOString());
+  bookmarkLink.setAttribute("href", bookmark.url);
+  bookmarkLink.setAttribute("target", "_blank");
+  bookmarkCard.classList.add("card");
+  bookmarkCard.appendChild(bookmarkTitle);
+  bookmarkCard.appendChild(bookmarkLink);
+  bookmarkCard.appendChild(bookmarkDate);
+  tabContent.appendChild(bookmarkCard);
+};
+
+/*
+  --------------------------------------------------------------------------------------
+  Função para carregar os favoritos do usuário
+  --------------------------------------------------------------------------------------
+*/
+const loadYourBookmarks = () => {
+  clearTab();
 };
 
 /*
@@ -100,6 +212,8 @@ const initApp = () => {
   if (!token) {
     toggleModal();
   }
+
+  loadLatestAdded();
 };
 
 initApp();

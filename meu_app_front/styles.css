@@ -1,4 +1,13 @@
-#userFormModal {
+.top-header {
+  display: flex;
+  box-sizing: border-box;
+  text-align: center;
+  position: relative;
+  padding: 5px 10px;
+  border-bottom: solid 1px #ccc;
+}
+
+.modal {
   position: fixed;
   display: flex;
   justify-content: center;
@@ -11,7 +20,7 @@
   background-color: rgba(0, 0, 0, 0.3);
 }
 
-.userFormContainer {
+.formContainer {
   width: 50vw;
   max-width: 320px;
   min-width: 250px;
@@ -63,7 +72,7 @@
   padding: 5px;
 }
 
-#addButton {
+#addBookmarkButton {
   position: fixed;
   bottom: 25px;
   right: 25px;
@@ -76,6 +85,61 @@
   cursor: pointer;
 }
 
-#addButton:hover {
-  background-color: rgb(255, 85, 85)
+#addBookmarkButton:hover {
+  background-color: rgb(255, 85, 85);
+}
+
+#tabs {
+  margin: auto;
+  max-width: 960px;
+}
+
+#tabs nav li {
+  padding: 10px;
+  border-bottom: solid 1px #ccc;
+}
+
+#tabs nav li.active {
+  border: solid 1px #ccc;
+  border-bottom: none;
+}
+
+#tabs nav li.active a {
+  color: black;
+  text-decoration: none;
+}
+
+#tabs #tabContent {
+  list-style: none;
+  padding: 0;
+}
+
+#tabs #tabContent .card {
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  max-width: 50vw;
+  min-width: 300px;
+  background-color: #f7f7f7;
+  border-radius: 5px;
+  padding: 10px;
+  margin-bottom: 10px;
+}
+
+#tabs #tabContent .card h2 {
+  width: 100%;
+  margin: 0 0 10px;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+#tabs #tabContent .card a {
+  display: block;
+}
+
+#tabs #tabContent .card time {
+  font-size: 0.8rem;
+  font-style: italic;
+  color: #888888
 }
