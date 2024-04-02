@@ -126,9 +126,9 @@
   margin-bottom: 10px;
 }
 
-#tabs #tabContent .card h2 {
+#tabs #tabContent .card h3 {
   width: 100%;
-  margin: 0 0 10px;
+  margin: 0;
   overflow: hidden;
   white-space: nowrap;
   text-overflow: ellipsis;

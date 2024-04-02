@@ -5,6 +5,7 @@
 */
 let loginMode = true;
 let isLoading = false;
+let activeTab = "latestAdded";
 const url = "http://127.0.0.1:5000";
 const nameInput = document.querySelector("input[name=nome]");
 const confirmPasswordInput = document.querySelector(
@@ -52,14 +53,25 @@ const onLoginFormSubmit = (e) => {
           return;
         }
 
-        console.log(json);
-        localStorage.setItem("token", json.token);
-        toggleModal("userFormModal");
+        setUserLoggedIn(json);
       });
     })
     .catch((error) => {
       console.log(error);
     });
+};
+
+/*
+  --------------------------------------------------------------------------------------
+  Função para definir o usuário como logado
+  --------------------------------------------------------------------------------------
+*/
+setUserLoggedIn = (json) => {
+  localStorage.setItem("token", json.token);
+  toggleModal("userFormModal");
+  toggleAddButton();
+  toggleLoginLinkText();
+  toggleYourBookmarksTab();
 };
 
 /*
@@ -81,12 +93,22 @@ const onBookmarkFormSubmit = (e) => {
   })
     .then((response) => response.json())
     .then((json) => {
-      loadLatestAdded();
+      form.reset();
+      refreshTab();
       toggleModal("bookmarkFormModal");
     })
     .catch((error) => {
       console.log(error);
     });
+};
+
+/*
+  --------------------------------------------------------------------------------------
+  Função para recarregar os favoritos da aba ativa
+  --------------------------------------------------------------------------------------
+*/
+const refreshTab = () => {
+  activeTab === "latestAdded" ? loadLatestAdded() : loadYourBookmarks();
 };
 
 /*
@@ -112,8 +134,35 @@ const validatePassword = () => {
 */
 const toggleModal = (modalId) => {
   const modal = document.querySelector(`#${modalId}`);
+  const form = document.forms["loginForm"];
 
   modal.classList.toggle("hidden");
+  form.reset();
+};
+
+/*
+  --------------------------------------------------------------------------------------
+  Função de logout, removendo token local
+  --------------------------------------------------------------------------------------
+*/
+const logout = () => {
+  const latestAdded = document.querySelector("#latestAdded");
+
+  latestAdded.dispatchEvent(new Event("click"));
+  localStorage.removeItem("token");
+  toggleLoginLinkText();
+  toggleAddButton();
+  toggleYourBookmarksTab();
+};
+
+/*
+  --------------------------------------------------------------------------------------
+  Função de controle da aba de Seus favoritos. Se logado, exibe; se não, esconde.
+  --------------------------------------------------------------------------------------
+*/
+toggleYourBookmarksTab = () => {
+  const yourBookmarks = document.querySelector("#yourBookmarks");
+  yourBookmarks.classList.toggle("hidden");
 };
 
 /*
@@ -129,10 +178,12 @@ const toggleTab = (event) => {
   if (parent.classList.contains("active")) return;
 
   for (const child of ulElement.children) {
-    child.classList.toggle("active");
+    child.classList.remove("active");
   }
 
+  parent.classList.add("active");
   link.id === "yourBookmarks" ? loadYourBookmarks() : loadLatestAdded();
+  activeTab = link.id;
 };
 
 /*
@@ -175,19 +226,20 @@ const insertBookmark = (bookmark) => {
   const bookmarkCard = document.createElement("li");
   const bookmarkDate = document.createElement("time");
   const bookmarkLink = document.createElement("a");
-  const bookmarkTitle = document.createElement("h2");
+  const bookmarkTitle = document.createElement("h3");
   const date = new Date(bookmark.data_insercao);
 
-  bookmarkDate.textContent = `adicionado em ${date.toLocaleDateString()}`;
-  bookmarkTitle.textContent = bookmark.titulo;
-  bookmarkLink.textContent = bookmark.url;
-  bookmarkDate.setAttribute("datetime", date.toISOString());
+  bookmarkLink.textContent = bookmark.titulo;
   bookmarkLink.setAttribute("href", bookmark.url);
   bookmarkLink.setAttribute("target", "_blank");
-  bookmarkCard.classList.add("card");
+  bookmarkLink.setAttribute("title", bookmark.url);
+  bookmarkDate.textContent = `adicionado em ${date.toLocaleDateString()}`;
+  bookmarkDate.setAttribute("datetime", date.toISOString());
+
+  bookmarkTitle.appendChild(bookmarkLink);
   bookmarkCard.appendChild(bookmarkTitle);
-  bookmarkCard.appendChild(bookmarkLink);
   bookmarkCard.appendChild(bookmarkDate);
+  bookmarkCard.classList.add("card");
   tabContent.appendChild(bookmarkCard);
 };
 
@@ -198,6 +250,42 @@ const insertBookmark = (bookmark) => {
 */
 const loadYourBookmarks = () => {
   clearTab();
+
+  if (!localStorage.getItem("token")) return;
+
+  fetch(`${url}/meus-favoritos`, {
+    headers: {
+      Token: localStorage.getItem("token"),
+    },
+  })
+    .then((response) => response.json())
+    .then((json) => {
+      json["favoritos"].forEach((bookmark) => {
+        insertBookmark(bookmark);
+      });
+    })
+    .catch((error) => {
+      console.log(error);
+    });
+};
+
+/*
+  --------------------------------------------------------------------------------------
+  Função para controlara a exibição do botão de adicionar favorito
+  --------------------------------------------------------------------------------------
+*/
+const toggleAddButton = () => {
+  const addButton = document.querySelector("#addBookmarkButton");
+
+  addButton.classList.toggle("hidden");
+};
+
+const toggleLoginLinkText = () => {
+  const loginLink = document.querySelector("#loginLink");
+  const logoutLink = document.querySelector("#logoutLink");
+
+  loginLink.classList.toggle("hidden");
+  logoutLink.classList.toggle("hidden");
 };
 
 /*
@@ -210,7 +298,11 @@ const initApp = () => {
   let token = localStorage.getItem("token");
 
   if (!token) {
-    toggleModal();
+    toggleModal("userFormModal");
+  } else {
+    toggleAddButton();
+    toggleLoginLinkText();
+    toggleYourBookmarksTab();
   }
 
   loadLatestAdded();
