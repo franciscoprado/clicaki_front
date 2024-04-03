@@ -1,18 +1,12 @@
 /*
   --------------------------------------------------------------------------------------
-  Elementos do HTML
+  Variáveis
   --------------------------------------------------------------------------------------
 */
 let loginMode = true;
 let isLoading = false;
 let activeTab = "latestAdded";
 const url = "http://127.0.0.1:5000";
-const nameInput = document.querySelector("input[name=nome]");
-const confirmPasswordInput = document.querySelector(
-  "input[name=confirmar_senha]"
-);
-const registerLink = document.querySelector("#registerLink");
-const formButton = document.querySelector("#formButton");
 
 /*
   --------------------------------------------------------------------------------------
@@ -21,6 +15,12 @@ const formButton = document.querySelector("#formButton");
 */
 const toggleForm = () => {
   const form = document.forms["loginForm"];
+  const confirmPasswordInput = document.querySelector(
+    "input[name=confirmar_senha]"
+  );
+  const nameInput = document.querySelector("input[name=nome]");
+  const registerLink = document.querySelector("#registerLink");
+  const formButton = document.querySelector("#formButton");
 
   loginMode = !loginMode;
   nameInput.classList.toggle("hidden");
@@ -202,7 +202,19 @@ const loadLatestAdded = () => {
     })
     .catch((error) => {
       console.log(error);
+      showNoBookmarkMessage();
     });
+};
+
+/*
+  --------------------------------------------------------------------------------------
+  Função para exibir uma mensagem de que não há nenhum favorito
+  --------------------------------------------------------------------------------------
+*/
+const showNoBookmarkMessage = () => {
+  const tabContent = document.querySelector("#tabContent");
+  tabContent.innerHTML = `<p><strong>Nenhum favorito ainda... ¬¬</strong>`;
+  tabContent.innerHTML += `Faça login e adicione um!</p>`;
 };
 
 /*
@@ -266,6 +278,7 @@ const loadYourBookmarks = () => {
     })
     .catch((error) => {
       console.log(error);
+      showNoBookmarkMessage();
     });
 };
 
