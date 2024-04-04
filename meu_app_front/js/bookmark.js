@@ -1,80 +1,5 @@
 /*
   --------------------------------------------------------------------------------------
-  Variáveis
-  --------------------------------------------------------------------------------------
-*/
-let loginMode = true;
-let activeTab = "latestAdded";
-const url = "http://127.0.0.1:5000";
-
-/*
-  --------------------------------------------------------------------------------------
-  Função para alternar entre o form de login e de cadastro
-  --------------------------------------------------------------------------------------
-*/
-const toggleForm = () => {
-  const form = document.forms["loginForm"];
-  const confirmPasswordInput = document.querySelector(
-    "input[name=confirmar_senha]"
-  );
-  const nameInput = document.querySelector("input[name=nome]");
-  const registerLink = document.querySelector("#registerLink");
-  const formButton = document.querySelector("#formButton");
-
-  loginMode = !loginMode;
-  nameInput.classList.toggle("hidden");
-  confirmPasswordInput.classList.toggle("hidden");
-  nameInput.toggleAttribute("required");
-  confirmPasswordInput.toggleAttribute("required");
-  registerLink.textContent = loginMode ? "Não tenho cadastro" : "Fazer login";
-  formButton.textContent = loginMode ? "Login" : "Cadastrar";
-  form.reset();
-};
-
-/*
-  --------------------------------------------------------------------------------------
-  Função para fazer login
-  --------------------------------------------------------------------------------------
-*/
-const onLoginFormSubmit = (e) => {
-  let acao = loginMode ? "login" : "cadastro";
-  const form = document.forms["loginForm"];
-
-  e.preventDefault();
-  fetch(`${url}/${acao}`, {
-    method: "post",
-    body: new FormData(form),
-  })
-    .then((response) => {
-      response.json().then((json) => {
-        if (response.status != 200) {
-          alert(json.message);
-          return;
-        }
-
-        setUserLoggedIn(json);
-      });
-    })
-    .catch((error) => {
-      console.log(error);
-    });
-};
-
-/*
-  --------------------------------------------------------------------------------------
-  Função para definir o usuário como logado
-  --------------------------------------------------------------------------------------
-*/
-setUserLoggedIn = (json) => {
-  localStorage.setItem("token", json.token);
-  toggleModal("userFormModal");
-  toggleAddButton();
-  toggleLoginLinkText();
-  toggleYourBookmarksTab();
-};
-
-/*
-  --------------------------------------------------------------------------------------
   Função para submeter o formulário e cadastrar favorito
   --------------------------------------------------------------------------------------
 */
@@ -110,10 +35,10 @@ const onBookmarkFormSubmit = (e) => {
 };
 
 /*
-  --------------------------------------------------------------------------------------
-  Função para recarregar os favoritos da aba ativa
-  --------------------------------------------------------------------------------------
-*/
+    --------------------------------------------------------------------------------------
+    Função para recarregar os favoritos da aba ativa
+    --------------------------------------------------------------------------------------
+  */
 const refreshTab = () => {
   activeTab === "latestAdded" ? loadLatestAdded() : loadYourBookmarks();
 };
@@ -135,10 +60,10 @@ const validatePassword = () => {
 };
 
 /*
-  --------------------------------------------------------------------------------------
-  Função para fechar/abrir a modal de login
-  --------------------------------------------------------------------------------------
-*/
+    --------------------------------------------------------------------------------------
+    Função para fechar/abrir a modal de login
+    --------------------------------------------------------------------------------------
+  */
 const toggleModal = (modalId) => {
   const modal = document.querySelector(`#${modalId}`);
   const form = document.forms["loginForm"];
@@ -148,10 +73,10 @@ const toggleModal = (modalId) => {
 };
 
 /*
-  --------------------------------------------------------------------------------------
-  Função de logout, removendo token local
-  --------------------------------------------------------------------------------------
-*/
+    --------------------------------------------------------------------------------------
+    Função de logout, removendo token local
+    --------------------------------------------------------------------------------------
+  */
 const logout = () => {
   const latestAdded = document.querySelector("#latestAdded");
 
@@ -173,10 +98,10 @@ toggleYourBookmarksTab = () => {
 };
 
 /*
-  --------------------------------------------------------------------------------------
-  Função para alternar as abas
-  --------------------------------------------------------------------------------------
-*/
+    --------------------------------------------------------------------------------------
+    Função para alternar as abas
+    --------------------------------------------------------------------------------------
+  */
 const toggleTab = (event) => {
   const link = event.target;
   const parent = link.parentElement;
@@ -214,10 +139,10 @@ const loadLatestAdded = () => {
 };
 
 /*
-  --------------------------------------------------------------------------------------
-  Função para exibir uma mensagem de que não há nenhum favorito
-  --------------------------------------------------------------------------------------
-*/
+    --------------------------------------------------------------------------------------
+    Função para exibir uma mensagem de que não há nenhum favorito
+    --------------------------------------------------------------------------------------
+  */
 const showNoBookmarkMessage = () => {
   const tabContent = document.querySelector("#tabContent");
   tabContent.innerHTML = `<p><strong>Nenhum favorito ainda... ¬¬</strong>`;
@@ -225,10 +150,10 @@ const showNoBookmarkMessage = () => {
 };
 
 /*
-  --------------------------------------------------------------------------------------
-  Função para limpar as abas de conteúdo anterior.
-  --------------------------------------------------------------------------------------
-*/
+    --------------------------------------------------------------------------------------
+    Função para limpar as abas de conteúdo anterior.
+    --------------------------------------------------------------------------------------
+  */
 const clearTab = () => {
   const tabContent = document.querySelector("#tabContent");
 
@@ -236,10 +161,10 @@ const clearTab = () => {
 };
 
 /*
-  --------------------------------------------------------------------------------------
-  Função para inserir um favorito na lista
-  --------------------------------------------------------------------------------------
-*/
+    --------------------------------------------------------------------------------------
+    Função para inserir um favorito na lista
+    --------------------------------------------------------------------------------------
+  */
 const insertBookmark = (bookmark, deleteButton = false) => {
   const tabContent = document.querySelector("#tabContent");
   const bookmarkCard = document.createElement("li");
@@ -273,6 +198,11 @@ const insertBookmark = (bookmark, deleteButton = false) => {
   }
 };
 
+/*
+    --------------------------------------------------------------------------------------
+    Função para remover um favorito do usuário
+    --------------------------------------------------------------------------------------
+  */
 const deleteBookmark = (event, bookmarkId) => {
   const card = event.target.parentElement.parentElement;
 
@@ -300,10 +230,10 @@ const deleteBookmark = (event, bookmarkId) => {
 };
 
 /*
-  --------------------------------------------------------------------------------------
-  Função para carregar os favoritos do usuário
-  --------------------------------------------------------------------------------------
-*/
+    --------------------------------------------------------------------------------------
+    Função para carregar os favoritos do usuário
+    --------------------------------------------------------------------------------------
+  */
 const loadYourBookmarks = () => {
   clearTab();
 
@@ -316,7 +246,8 @@ const loadYourBookmarks = () => {
   })
     .then((response) => response.json())
     .then((json) => {
-      json["favoritos"].forEach((bookmark) => {
+      const favoritos = json["favoritos"];
+      favoritos.forEach((bookmark) => {
         insertBookmark(bookmark, true);
       });
     })
@@ -325,61 +256,3 @@ const loadYourBookmarks = () => {
       showNoBookmarkMessage();
     });
 };
-
-/*
-  --------------------------------------------------------------------------------------
-  Função para controlara a exibição do botão de adicionar favorito
-  --------------------------------------------------------------------------------------
-*/
-const toggleAddButton = () => {
-  const addButton = document.querySelector("#addBookmarkButton");
-
-  addButton.classList.toggle("hidden");
-};
-
-const toggleLoginLinkText = () => {
-  const loginLink = document.querySelector("#loginLink");
-  const logoutLink = document.querySelector("#logoutLink");
-
-  loginLink.classList.toggle("hidden");
-  logoutLink.classList.toggle("hidden");
-};
-
-const verifyUserLogin = () => {
-  let token = localStorage.getItem("token");
-
-  if (!token) {
-    toggleModal("userFormModal");
-    return;
-  }
-
-  fetch(`${url}/usuario`, {
-    headers: {
-      Token: localStorage.getItem("token"),
-    },
-  })
-    .then((response) => {
-      if (response.status == 200) {
-        toggleAddButton();
-        toggleLoginLinkText();
-        toggleYourBookmarksTab();
-      }
-    })
-    .catch((error) => {
-      console.log(error);
-      showNoBookmarkMessage();
-    });
-};
-
-/*
-  --------------------------------------------------------------------------------------
-  Função para iniciar aplicação
-  --------------------------------------------------------------------------------------
-*/
-const initApp = () => {
-  console.log("Inicializando app...");
-  verifyUserLogin();
-  loadLatestAdded();
-};
-
-initApp();
