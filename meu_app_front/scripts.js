@@ -4,7 +4,6 @@
   --------------------------------------------------------------------------------------
 */
 let loginMode = true;
-let isLoading = false;
 let activeTab = "latestAdded";
 const url = "http://127.0.0.1:5000";
 
@@ -91,14 +90,22 @@ const onBookmarkFormSubmit = (e) => {
       Token: localStorage.getItem("token"),
     },
   })
-    .then((response) => response.json())
+    .then((response) => {
+      if (response.status != 200) {
+        alert("Erro: usuário não autorizado.");
+        logout();
+        return;
+      }
+
+      response.json();
+    })
     .then((json) => {
       form.reset();
       refreshTab();
       toggleModal("bookmarkFormModal");
     })
     .catch((error) => {
-      console.log(error);
+      alert(error);
     });
 };
 
@@ -233,11 +240,12 @@ const clearTab = () => {
   Função para inserir um favorito na lista
   --------------------------------------------------------------------------------------
 */
-const insertBookmark = (bookmark) => {
+const insertBookmark = (bookmark, deleteButton = false) => {
   const tabContent = document.querySelector("#tabContent");
   const bookmarkCard = document.createElement("li");
   const bookmarkDate = document.createElement("time");
   const bookmarkLink = document.createElement("a");
+  const bookmarkDelete = document.createElement("a");
   const bookmarkTitle = document.createElement("h3");
   const date = new Date(bookmark.data_insercao);
 
@@ -253,6 +261,42 @@ const insertBookmark = (bookmark) => {
   bookmarkCard.appendChild(bookmarkDate);
   bookmarkCard.classList.add("card");
   tabContent.appendChild(bookmarkCard);
+
+  if (deleteButton) {
+    bookmarkDelete.setAttribute("href", "javascript: void(0)");
+    bookmarkDelete.setAttribute(
+      "onclick",
+      `deleteBookmark(event, ${bookmark.id})`
+    );
+    bookmarkDelete.innerHTML = `<small>remover</small>`;
+    bookmarkCard.appendChild(bookmarkDelete);
+  }
+};
+
+const deleteBookmark = (event, bookmarkId) => {
+  const card = event.target.parentElement.parentElement;
+
+  fetch(`${url}/favorito?id=${bookmarkId}`, {
+    method: "delete",
+    headers: {
+      Token: localStorage.getItem("token"),
+    },
+  })
+    .then((response) => {
+      response.json().then((json) => {
+        if (response.status != 200) {
+          alert(json.message);
+          logout();
+        } else {
+          alert("Favorito removido com sucesso!");
+          card.remove();
+          loadYourBookmarks();
+        }
+      });
+    })
+    .catch((error) => {
+      console.log(error);
+    });
 };
 
 /*
@@ -273,7 +317,7 @@ const loadYourBookmarks = () => {
     .then((response) => response.json())
     .then((json) => {
       json["favoritos"].forEach((bookmark) => {
-        insertBookmark(bookmark);
+        insertBookmark(bookmark, true);
       });
     })
     .catch((error) => {
@@ -301,6 +345,32 @@ const toggleLoginLinkText = () => {
   logoutLink.classList.toggle("hidden");
 };
 
+const verifyUserLogin = () => {
+  let token = localStorage.getItem("token");
+
+  if (!token) {
+    toggleModal("userFormModal");
+    return;
+  }
+
+  fetch(`${url}/usuario`, {
+    headers: {
+      Token: localStorage.getItem("token"),
+    },
+  })
+    .then((response) => {
+      if (response.status == 200) {
+        toggleAddButton();
+        toggleLoginLinkText();
+        toggleYourBookmarksTab();
+      }
+    })
+    .catch((error) => {
+      console.log(error);
+      showNoBookmarkMessage();
+    });
+};
+
 /*
   --------------------------------------------------------------------------------------
   Função para iniciar aplicação
@@ -308,16 +378,7 @@ const toggleLoginLinkText = () => {
 */
 const initApp = () => {
   console.log("Inicializando app...");
-  let token = localStorage.getItem("token");
-
-  if (!token) {
-    toggleModal("userFormModal");
-  } else {
-    toggleAddButton();
-    toggleLoginLinkText();
-    toggleYourBookmarksTab();
-  }
-
+  verifyUserLogin();
   loadLatestAdded();
 };
 

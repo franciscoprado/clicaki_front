@@ -92,6 +92,7 @@
 #tabs {
   margin: auto;
   max-width: 960px;
+  padding: 0 32px;
 }
 
 #tabs nav li {
