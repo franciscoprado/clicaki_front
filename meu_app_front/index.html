@@ -22,17 +22,6 @@
   <!-- Cabeçalho de informações do sistema -->
   <header class="cabecalho flex flex-row align-items-center space-between">
     <h1 class="width-100 margin-0">Clicaki</h1>
-    <nav>
-      <ul class="list-no-style">
-        <li>
-          <a id="loginLink" href="javascript:void(0)" onclick="alternarModal('userFormModal')
-          ">Login</a>
-        </li>
-        <li>
-          <a id="logoutLink" class="hidden" href="javascript:void(0)" onclick="logout()">Sair</a>
-        </li>
-      </ul>
-    </nav>
   </header>
 
   <article id="abas">
@@ -40,15 +29,11 @@
       <nav>
         <ul class="list-no-style inline-block padding-0">
           <li class="ativo">
-            <a id="latestAdded" href="javascript:void(0)" onclick="alternarAba(event)">
+            <a id="ultimosAdicionados" href="javascript:void(0)">
               Últimos adicionados
             </a>
           </li>
-          <li>
-            <a id="yourBookmarks" class="hidden" href="javascript:void(0)" onclick="alternarAba(event)">
-              Seus favoritos
-            </a>
-          </li>
+          <li></li>
         </ul>
       </nav>
     </header>
@@ -56,50 +41,25 @@
     <section>
       <ul id="abaConteudo"></ul>
     </section>
+
+    <footer>
+      <button id="carregarMaisBotao" class="width-100" onclick="carregarMais()">
+        <span class="material-symbols-outlined">
+          add
+        </span>
+      </button>
+    </footer>
   </article>
 
-  <!-- Opções para adicionar um novo usuário -->
-  <div id="userFormModal" class="modal hidden">
-    <section id="loginFormContainer" class="formContainer">
-      <header class="flex flex-row align-items-center space-between">
-        <h3 class="width-100 margin-0">Acesso</h3>
-        <a href="javascript:void(0)" onclick="alternarModal('userFormModal')">
-          <span class="material-symbols-outlined">close</span>
-        </a>
-      </header>
-      <form id="loginForm" action="" onsubmit="fazerLogin(event)">
-        <p>
-          <input type="text" name="nome" class="hidden" placeholder="Nome" />
-        </p>
-        <p>
-          <input type="email" name="email" placeholder="E-mail" required />
-        </p>
-        <p>
-          <input type="password" name="senha" placeholder="Senha" required />
-        </p>
-        <p>
-          <input type="password" name="confirmar_senha" class="hidden" onchange="validarSenha()"
-            placeholder="Confirmar senha" />
-        </p>
-        <p>
-          <a href="javascript:void(0)" id="registerLink" onclick="alternarFormulario()">
-            Não tenho cadastro
-          </a>
-        </p>
-        <button type="submit" id="formButton">Login</button>
-      </form>
-    </section>
-  </div>
-
-  <div id="bookmarkFormModal" class="modal hidden">
+  <div id="modalAdicionarFavorito" class="modal hidden">
     <section id="searchFormContainer" class="formContainer">
       <header class="flex flex-row align-items-center space-between">
         <h3 class="width-100 margin-0">Adicionar favorito</h3>
-        <a href="javascript:void(0)" onclick="alternarModal('bookmarkFormModal')">
+        <a href="javascript:void(0)" onclick="alternarModal('modalAdicionarFavorito')">
           <span class="material-symbols-outlined">close</span>
         </a>
       </header>
-      <form id="addBookmarkForm" action="" onsubmit="enviarFavorito(event)">
+      <form id="adicionarFavoritoForm" action="" onsubmit="enviarFavorito(event)">
         <p>
           <input type="url" name="url" placeholder="https://www.seulink.com" required />
         </p>
@@ -115,14 +75,12 @@
     </section>
   </div>
 
-  <button id="adicionarFavoritoBotao" class="hidden" title="Adicionar favorito" onclick="alternarModal('bookmarkFormModal')">
+  <button id="adicionarFavoritoBotao" title="Adicionar favorito" onclick="alternarModal('modalAdicionarFavorito')">
     <span class="material-symbols-outlined">
       add
     </span>
   </button>
 
-  <script src="js/user.js"></script>
-  <script src="js/bookmark.js"></script>
   <script src="js/init.js"></script>
 </body>
 

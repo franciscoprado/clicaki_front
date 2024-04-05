@@ -91,8 +91,8 @@
 
 #abas {
   margin: auto;
-  max-width: 960px;
   padding: 0 32px;
+  max-width: 960px;
 }
 
 #abas nav li {
@@ -119,8 +119,6 @@
   display: flex;
   flex-direction: column;
   justify-content: flex-start;
-  max-width: 50vw;
-  min-width: 300px;
   background-color: #f7f7f7;
   border-radius: 5px;
   padding: 10px;
@@ -142,5 +140,17 @@
 #abas #abaConteudo .card time {
   font-size: 0.8rem;
   font-style: italic;
-  color: #888888
+  color: #888888;
+}
+
+#carregarMaisBotao {
+  border-color: rgb(60, 79, 255);
+  border-radius: 10px;
+  background-color: rgb(20, 40, 219);
+  color: white;
+  cursor: pointer;
+}
+
+#carregarMaisBotao:hover {
+  background-color: rgb(30, 52, 252);
 }
