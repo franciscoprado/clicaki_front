@@ -20,12 +20,12 @@
 
 <body>
   <!-- Cabeçalho de informações do sistema -->
-  <header class="top-header flex flex-row align-items-center space-between">
+  <header class="cabecalho flex flex-row align-items-center space-between">
     <h1 class="width-100 margin-0">Clicaki</h1>
     <nav>
       <ul class="list-no-style">
         <li>
-          <a id="loginLink" href="javascript:void(0)" onclick="toggleModal('userFormModal')
+          <a id="loginLink" href="javascript:void(0)" onclick="alternarModal('userFormModal')
           ">Login</a>
         </li>
         <li>
@@ -35,17 +35,17 @@
     </nav>
   </header>
 
-  <article id="tabs">
+  <article id="abas">
     <header>
       <nav>
         <ul class="list-no-style inline-block padding-0">
-          <li class="active">
-            <a id="latestAdded" href="javascript:void(0)" onclick="toggleTab(event)">
+          <li class="ativo">
+            <a id="latestAdded" href="javascript:void(0)" onclick="alternarAba(event)">
               Últimos adicionados
             </a>
           </li>
           <li>
-            <a id="yourBookmarks" class="hidden" href="javascript:void(0)" onclick="toggleTab(event)">
+            <a id="yourBookmarks" class="hidden" href="javascript:void(0)" onclick="alternarAba(event)">
               Seus favoritos
             </a>
           </li>
@@ -54,7 +54,7 @@
     </header>
 
     <section>
-      <ul id="tabContent"></ul>
+      <ul id="abaConteudo"></ul>
     </section>
   </article>
 
@@ -63,11 +63,11 @@
     <section id="loginFormContainer" class="formContainer">
       <header class="flex flex-row align-items-center space-between">
         <h3 class="width-100 margin-0">Acesso</h3>
-        <a href="javascript:void(0)" onclick="toggleModal('userFormModal')">
+        <a href="javascript:void(0)" onclick="alternarModal('userFormModal')">
           <span class="material-symbols-outlined">close</span>
         </a>
       </header>
-      <form id="loginForm" action="" onsubmit="onLoginFormSubmit(event)">
+      <form id="loginForm" action="" onsubmit="fazerLogin(event)">
         <p>
           <input type="text" name="nome" class="hidden" placeholder="Nome" />
         </p>
@@ -78,11 +78,11 @@
           <input type="password" name="senha" placeholder="Senha" required />
         </p>
         <p>
-          <input type="password" name="confirmar_senha" class="hidden" onchange="validatePassword()"
+          <input type="password" name="confirmar_senha" class="hidden" onchange="validarSenha()"
             placeholder="Confirmar senha" />
         </p>
         <p>
-          <a href="javascript:void(0)" id="registerLink" onclick="toggleForm()">
+          <a href="javascript:void(0)" id="registerLink" onclick="alternarFormulario()">
             Não tenho cadastro
           </a>
         </p>
@@ -95,11 +95,11 @@
     <section id="searchFormContainer" class="formContainer">
       <header class="flex flex-row align-items-center space-between">
         <h3 class="width-100 margin-0">Adicionar favorito</h3>
-        <a href="javascript:void(0)" onclick="toggleModal('bookmarkFormModal')">
+        <a href="javascript:void(0)" onclick="alternarModal('bookmarkFormModal')">
           <span class="material-symbols-outlined">close</span>
         </a>
       </header>
-      <form id="addBookmarkForm" action="" onsubmit="onBookmarkFormSubmit(event)">
+      <form id="addBookmarkForm" action="" onsubmit="enviarFavorito(event)">
         <p>
           <input type="url" name="url" placeholder="https://www.seulink.com" required />
         </p>
@@ -115,7 +115,7 @@
     </section>
   </div>
 
-  <button id="addBookmarkButton" class="hidden" title="Adicionar favorito" onclick="toggleModal('bookmarkFormModal')">
+  <button id="adicionarFavoritoBotao" class="hidden" title="Adicionar favorito" onclick="alternarModal('bookmarkFormModal')">
     <span class="material-symbols-outlined">
       add
     </span>

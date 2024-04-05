@@ -3,7 +3,7 @@
   Função para alternar entre o form de login e de cadastro
   --------------------------------------------------------------------------------------
 */
-const toggleForm = () => {
+const alternarFormulario = () => {
   const form = document.forms["loginForm"];
   const confirmPasswordInput = document.querySelector(
     "input[name=confirmar_senha]"
@@ -12,13 +12,13 @@ const toggleForm = () => {
   const registerLink = document.querySelector("#registerLink");
   const formButton = document.querySelector("#formButton");
 
-  loginMode = !loginMode;
+  modoLogin = !modoLogin;
   nameInput.classList.toggle("hidden");
   confirmPasswordInput.classList.toggle("hidden");
   nameInput.toggleAttribute("required");
   confirmPasswordInput.toggleAttribute("required");
-  registerLink.textContent = loginMode ? "Não tenho cadastro" : "Fazer login";
-  formButton.textContent = loginMode ? "Login" : "Cadastrar";
+  registerLink.textContent = modoLogin ? "Não tenho cadastro" : "Fazer login";
+  formButton.textContent = modoLogin ? "Login" : "Cadastrar";
   form.reset();
 };
 
@@ -27,8 +27,8 @@ const toggleForm = () => {
     Função para fazer login
     --------------------------------------------------------------------------------------
   */
-const onLoginFormSubmit = (e) => {
-  let acao = loginMode ? "login" : "cadastro";
+const fazerLogin = (e) => {
+  let acao = modoLogin ? "login" : "cadastro";
   const form = document.forms["loginForm"];
 
   e.preventDefault();
@@ -43,7 +43,7 @@ const onLoginFormSubmit = (e) => {
           return;
         }
 
-        setUserLoggedIn(json);
+        definiarUsuarioLogado(json);
       });
     })
     .catch((error) => {
@@ -56,12 +56,12 @@ const onLoginFormSubmit = (e) => {
     Função para definir o usuário como logado
     --------------------------------------------------------------------------------------
   */
-const setUserLoggedIn = (json) => {
+const definiarUsuarioLogado = (json) => {
   localStorage.setItem("token", json.token);
-  toggleModal("userFormModal");
-  toggleAddButton();
-  toggleLoginLinkText();
-  toggleYourBookmarksTab();
+  alternarModal("userFormModal");
+  alternarBotaoAdicionar();
+  alternarTextoLoginLink();
+  alternarAbaSeusFavoritos();
 };
 
 /*
@@ -69,8 +69,8 @@ const setUserLoggedIn = (json) => {
   Função para controlara a exibição do botão de adicionar favorito
   --------------------------------------------------------------------------------------
 */
-const toggleAddButton = () => {
-  const addButton = document.querySelector("#addBookmarkButton");
+const alternarBotaoAdicionar = () => {
+  const addButton = document.querySelector("#adicionarFavoritoBotao");
 
   addButton.classList.toggle("hidden");
 };
@@ -80,7 +80,7 @@ const toggleAddButton = () => {
     Função para alternar o comportamento do link do cabeçalho (Login/Sair)
     --------------------------------------------------------------------------------------
   */
-const toggleLoginLinkText = () => {
+const alternarTextoLoginLink = () => {
   const loginLink = document.querySelector("#loginLink");
   const logoutLink = document.querySelector("#logoutLink");
 
@@ -93,11 +93,11 @@ const toggleLoginLinkText = () => {
     Função para verificar se usuário está logado
     --------------------------------------------------------------------------------------
   */
-const verifyUserLogin = () => {
+const verificarUsuarioLogado = () => {
   let token = localStorage.getItem("token");
 
   if (!token) {
-    toggleModal("userFormModal");
+    alternarModal("userFormModal");
     return;
   }
 
@@ -108,13 +108,13 @@ const verifyUserLogin = () => {
   })
     .then((response) => {
       if (response.status == 200) {
-        toggleAddButton();
-        toggleLoginLinkText();
-        toggleYourBookmarksTab();
+        alternarBotaoAdicionar();
+        alternarTextoLoginLink();
+        alternarAbaSeusFavoritos();
       }
     })
     .catch((error) => {
       console.log(error);
-      showNoBookmarkMessage();
+      exibirMensagemSemFavoritos();
     });
 };

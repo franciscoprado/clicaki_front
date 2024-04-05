@@ -3,8 +3,8 @@
   Variáveis
   --------------------------------------------------------------------------------------
 */
-let loginMode = true;
-let activeTab = "latestAdded";
+let modoLogin = true;
+let abaAtiva = "latestAdded";
 const url = "http://127.0.0.1:5000";
 
 /*
@@ -12,10 +12,10 @@ const url = "http://127.0.0.1:5000";
   Função para iniciar aplicação
   --------------------------------------------------------------------------------------
 */
-const initApp = () => {
+const iniciar = () => {
   console.log("Inicializando app...");
-  verifyUserLogin();
-  loadLatestAdded();
+  verificarUsuarioLogado();
+  carregarUltimosAdicionados();
 };
 
-initApp();
+iniciar();

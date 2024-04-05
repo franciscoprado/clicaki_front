@@ -3,7 +3,7 @@
   Função para submeter o formulário e cadastrar favorito
   --------------------------------------------------------------------------------------
 */
-const onBookmarkFormSubmit = (e) => {
+const enviarFavorito = (e) => {
   const form = document.forms["addBookmarkForm"];
 
   e.preventDefault();
@@ -26,8 +26,8 @@ const onBookmarkFormSubmit = (e) => {
     })
     .then((json) => {
       form.reset();
-      refreshTab();
-      toggleModal("bookmarkFormModal");
+      atualizarAba();
+      alternarModal("bookmarkFormModal");
     })
     .catch((error) => {
       alert(error);
@@ -39,8 +39,8 @@ const onBookmarkFormSubmit = (e) => {
     Função para recarregar os favoritos da aba ativa
     --------------------------------------------------------------------------------------
   */
-const refreshTab = () => {
-  activeTab === "latestAdded" ? loadLatestAdded() : loadYourBookmarks();
+const atualizarAba = () => {
+  abaAtiva === "latestAdded" ? carregarUltimosAdicionados() : carregarSeusFavoritos();
 };
 
 /*
@@ -48,7 +48,7 @@ const refreshTab = () => {
   Função para validar senha no formulário de cadastro
   --------------------------------------------------------------------------------------
 */
-const validatePassword = () => {
+const validarSenha = () => {
   const password = document.querySelector("input[name=senha]");
   const confirm = document.querySelector("input[name=confirmar_senha]");
 
@@ -64,7 +64,7 @@ const validatePassword = () => {
     Função para fechar/abrir a modal de login
     --------------------------------------------------------------------------------------
   */
-const toggleModal = (modalId) => {
+const alternarModal = (modalId) => {
   const modal = document.querySelector(`#${modalId}`);
   const form = document.forms["loginForm"];
 
@@ -82,9 +82,9 @@ const logout = () => {
 
   latestAdded.dispatchEvent(new Event("click"));
   localStorage.removeItem("token");
-  toggleLoginLinkText();
-  toggleAddButton();
-  toggleYourBookmarksTab();
+  alternarTextoLoginLink();
+  alternarBotaoAdicionar();
+  alternarAbaSeusFavoritos();
 };
 
 /*
@@ -92,7 +92,7 @@ const logout = () => {
   Função de controle da aba de Seus favoritos. Se logado, exibe; se não, esconde.
   --------------------------------------------------------------------------------------
 */
-toggleYourBookmarksTab = () => {
+alternarAbaSeusFavoritos = () => {
   const yourBookmarks = document.querySelector("#yourBookmarks");
   yourBookmarks.classList.toggle("hidden");
 };
@@ -102,20 +102,20 @@ toggleYourBookmarksTab = () => {
     Função para alternar as abas
     --------------------------------------------------------------------------------------
   */
-const toggleTab = (event) => {
+const alternarAba = (event) => {
   const link = event.target;
   const parent = link.parentElement;
   const ulElement = link.parentElement.parentElement;
 
-  if (parent.classList.contains("active")) return;
+  if (parent.classList.contains("ativo")) return;
 
   for (const child of ulElement.children) {
-    child.classList.remove("active");
+    child.classList.remove("ativo");
   }
 
-  parent.classList.add("active");
-  link.id === "yourBookmarks" ? loadYourBookmarks() : loadLatestAdded();
-  activeTab = link.id;
+  parent.classList.add("ativo");
+  link.id === "yourBookmarks" ? carregarSeusFavoritos() : carregarUltimosAdicionados();
+  abaAtiva = link.id;
 };
 
 /*
@@ -123,18 +123,18 @@ const toggleTab = (event) => {
   Função para carregar os favoritos adicionados mais recentemente
   --------------------------------------------------------------------------------------
 */
-const loadLatestAdded = () => {
-  clearTab();
+const carregarUltimosAdicionados = () => {
+  limparAba();
   fetch(`${url}/favoritos`)
     .then((response) => response.json())
     .then((json) => {
       json["favoritos"].forEach((bookmark) => {
-        insertBookmark(bookmark);
+        exibirFavorito(bookmark);
       });
     })
     .catch((error) => {
       console.log(error);
-      showNoBookmarkMessage();
+      exibirMensagemSemFavoritos();
     });
 };
 
@@ -143,10 +143,10 @@ const loadLatestAdded = () => {
     Função para exibir uma mensagem de que não há nenhum favorito
     --------------------------------------------------------------------------------------
   */
-const showNoBookmarkMessage = () => {
-  const tabContent = document.querySelector("#tabContent");
-  tabContent.innerHTML = `<p><strong>Nenhum favorito ainda... ¬¬</strong>`;
-  tabContent.innerHTML += `Faça login e adicione um!</p>`;
+const exibirMensagemSemFavoritos = () => {
+  const abaConteudo = document.querySelector("#abaConteudo");
+  abaConteudo.innerHTML = `<p><strong>Nenhum favorito ainda... ¬¬</strong>`;
+  abaConteudo.innerHTML += `Faça login e adicione um!</p>`;
 };
 
 /*
@@ -154,10 +154,10 @@ const showNoBookmarkMessage = () => {
     Função para limpar as abas de conteúdo anterior.
     --------------------------------------------------------------------------------------
   */
-const clearTab = () => {
-  const tabContent = document.querySelector("#tabContent");
+const limparAba = () => {
+  const abaConteudo = document.querySelector("#abaConteudo");
 
-  tabContent.innerHTML = "";
+  abaConteudo.innerHTML = "";
 };
 
 /*
@@ -165,8 +165,8 @@ const clearTab = () => {
     Função para inserir um favorito na lista
     --------------------------------------------------------------------------------------
   */
-const insertBookmark = (bookmark, deleteButton = false) => {
-  const tabContent = document.querySelector("#tabContent");
+const exibirFavorito = (bookmark, deleteButton = false) => {
+  const abaConteudo = document.querySelector("#abaConteudo");
   const bookmarkCard = document.createElement("li");
   const bookmarkDate = document.createElement("time");
   const bookmarkLink = document.createElement("a");
@@ -185,13 +185,13 @@ const insertBookmark = (bookmark, deleteButton = false) => {
   bookmarkCard.appendChild(bookmarkTitle);
   bookmarkCard.appendChild(bookmarkDate);
   bookmarkCard.classList.add("card");
-  tabContent.appendChild(bookmarkCard);
+  abaConteudo.appendChild(bookmarkCard);
 
   if (deleteButton) {
     bookmarkDelete.setAttribute("href", "javascript: void(0)");
     bookmarkDelete.setAttribute(
       "onclick",
-      `deleteBookmark(event, ${bookmark.id})`
+      `removerFavorito(event, ${bookmark.id})`
     );
     bookmarkDelete.innerHTML = `<small>remover</small>`;
     bookmarkCard.appendChild(bookmarkDelete);
@@ -203,7 +203,7 @@ const insertBookmark = (bookmark, deleteButton = false) => {
     Função para remover um favorito do usuário
     --------------------------------------------------------------------------------------
   */
-const deleteBookmark = (event, bookmarkId) => {
+const removerFavorito = (event, bookmarkId) => {
   const card = event.target.parentElement.parentElement;
 
   fetch(`${url}/favorito?id=${bookmarkId}`, {
@@ -220,7 +220,7 @@ const deleteBookmark = (event, bookmarkId) => {
         } else {
           alert("Favorito removido com sucesso!");
           card.remove();
-          loadYourBookmarks();
+          carregarSeusFavoritos();
         }
       });
     })
@@ -234,8 +234,8 @@ const deleteBookmark = (event, bookmarkId) => {
     Função para carregar os favoritos do usuário
     --------------------------------------------------------------------------------------
   */
-const loadYourBookmarks = () => {
-  clearTab();
+const carregarSeusFavoritos = () => {
+  limparAba();
 
   if (!localStorage.getItem("token")) return;
 
@@ -248,11 +248,11 @@ const loadYourBookmarks = () => {
     .then((json) => {
       const favoritos = json["favoritos"];
       favoritos.forEach((bookmark) => {
-        insertBookmark(bookmark, true);
+        exibirFavorito(bookmark, true);
       });
     })
     .catch((error) => {
       console.log(error);
-      showNoBookmarkMessage();
+      exibirMensagemSemFavoritos();
     });
 };

@@ -1,4 +1,4 @@
-.top-header {
+.cabecalho {
   display: flex;
   box-sizing: border-box;
   text-align: center;
@@ -36,7 +36,7 @@
   box-shadow: 5px 5px 8px #888888;
 }
 
-#bookmarksMenu {
+#menuFavoritos {
   position: fixed;
   box-sizing: border-box;
   width: 220px;
@@ -46,7 +46,7 @@
   padding: 5px;
 }
 
-#bookmarksMenu button {
+#menuFavoritos button {
   position: absolute;
   top: 20px;
   left: 219px;
@@ -60,19 +60,19 @@
   cursor: pointer;
 }
 
-#bookmarksMenu ul {
+#menuFavoritos ul {
   margin: 0;
   padding: 5px;
   list-style: none;
 }
 
-#bookmarksMenu li {
+#menuFavoritos li {
   border: solid 1px #ccc;
   margin: 0 0 5px;
   padding: 5px;
 }
 
-#addBookmarkButton {
+#adicionarFavoritoBotao {
   position: fixed;
   bottom: 25px;
   right: 25px;
@@ -85,37 +85,37 @@
   cursor: pointer;
 }
 
-#addBookmarkButton:hover {
+#adicionarFavoritoBotao:hover {
   background-color: rgb(255, 85, 85);
 }
 
-#tabs {
+#abas {
   margin: auto;
   max-width: 960px;
   padding: 0 32px;
 }
 
-#tabs nav li {
+#abas nav li {
   padding: 10px;
   border-bottom: solid 1px #ccc;
 }
 
-#tabs nav li.active {
+#abas nav li.ativo {
   border: solid 1px #ccc;
   border-bottom: none;
 }
 
-#tabs nav li.active a {
+#abas nav li.ativo a {
   color: black;
   text-decoration: none;
 }
 
-#tabs #tabContent {
+#abas #abaConteudo {
   list-style: none;
   padding: 0;
 }
 
-#tabs #tabContent .card {
+#abas #abaConteudo .card {
   display: flex;
   flex-direction: column;
   justify-content: flex-start;
@@ -127,7 +127,7 @@
   margin-bottom: 10px;
 }
 
-#tabs #tabContent .card h3 {
+#abas #abaConteudo .card h3 {
   width: 100%;
   margin: 0;
   overflow: hidden;
@@ -135,11 +135,11 @@
   text-overflow: ellipsis;
 }
 
-#tabs #tabContent .card a {
+#abas #abaConteudo .card a {
   display: block;
 }
 
-#tabs #tabContent .card time {
+#abas #abaConteudo .card time {
   font-size: 0.8rem;
   font-style: italic;
   color: #888888
