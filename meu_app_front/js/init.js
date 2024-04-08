@@ -111,8 +111,8 @@ const inserirFavorito = (favorito) => {
   const dataInsercao = new Date(favorito.data_insercao);
 
   favoritoLink.textContent = favorito.titulo;
-  favoritoLink.setAttribute("href", favorito.url);
-  favoritoLink.setAttribute("target", "_blank");
+  favoritoLink.setAttribute("href", "javascript: void(0);");
+  favoritoLink.setAttribute("onclick", `abrirFavorito(${favorito.id});`);
   favoritoLink.setAttribute("title", favorito.url);
   favoritoData.textContent = `adicionado em ${dataInsercao.toLocaleDateString()}`;
   favoritoData.setAttribute("datetime", dataInsercao.toISOString());
@@ -130,6 +130,29 @@ const inserirFavorito = (favorito) => {
   );
   favoritoDelete.innerHTML = `<small>remover</small>`;
   favoritoCard.appendChild(favoritoDelete);
+};
+
+/*
+    --------------------------------------------------------------------------------------
+    Função para abrir detalhes do favorito.
+    --------------------------------------------------------------------------------------
+  */
+const abrirFavorito = (favoritoId) => {
+  const favoritoUrl = document.querySelector("#favoritoUrl");
+  const favoritoDescricao = document.querySelector("#favoritoDescricao");
+
+  fetch(`${URL}/favorito?id=${favoritoId}`)
+    .then((response) => {
+      response.json().then((json) => {
+        alternarModal("modalFavoritoDetalhe");
+        favoritoDescricao.innerHTML = json["descricao"] ? json["descricao"] : "Sem descrição.";
+        favoritoUrl.innerHTML = json["url"];
+        favoritoUrl.setAttribute("href", json["url"]);
+      });
+    })
+    .catch((error) => {
+      console.log(error);
+    });
 };
 
 /*

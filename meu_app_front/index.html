@@ -67,10 +67,27 @@
           <input type="text" name="titulo" placeholder="Título do link" required />
         </p>
         <p>
-          <textarea name="descricao" placeholder="Descrição do link (opcional)" rows="4"></textarea>
+          <textarea name="descricao" maxlength="250" placeholder="Descrição do link (opcional)" rows="4"></textarea>
         </p>
         <button type="submit">Adicionar</button>
       </form>
+    </section>
+  </div>
+
+  <div id="modalFavoritoDetalhe" class="modal hidden">
+    <section class="formContainer">
+      <header class="flex flex-row align-items-center space-between">
+        <h3 class="width-100 margin-0">Favorito</h3>
+        <a href="javascript:void(0)" onclick="alternarModal('modalFavoritoDetalhe')">
+          <span class="material-symbols-outlined">close</span>
+        </a>
+      </header>
+      <article>
+        <p id="favoritoDescricao"></p>
+        <p>
+          <a href="" id="favoritoUrl" target="_blank"></a>
+        </p>
+      </article>
     </section>
   </div>
   <!-- /MODAIS -->
