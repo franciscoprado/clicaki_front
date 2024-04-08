@@ -20,11 +20,14 @@ button {
 
 a {
   text-decoration: none;
+  color: rgb(0, 85, 197);
+  transition: color 0.2s;
 }
 
 a:hover,
 a:focus {
-  text-decoration: underline;
+  color: rgb(0, 110, 255);
+  transition: color 0.2s;
 }
 
 input,

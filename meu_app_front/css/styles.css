@@ -144,13 +144,16 @@
 }
 
 #carregarMaisBotao {
-  border-color: rgb(60, 79, 255);
+  border-color: rgb(74, 152, 255);
   border-radius: 10px;
-  background-color: rgb(20, 40, 219);
   color: white;
   cursor: pointer;
+  background-color: rgb(0, 85, 197);
+  transition: background-color 0.2s;
 }
 
 #carregarMaisBotao:hover {
-  background-color: rgb(30, 52, 252);
+  border-color: rgb(0, 110, 255);
+  background-color: rgb(0, 110, 255);
+  transition: background-color 0.2s;
 }

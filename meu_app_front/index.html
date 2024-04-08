@@ -43,14 +43,13 @@
     </section>
 
     <footer>
-      <button id="carregarMaisBotao" class="width-100" onclick="carregarMais()">
-        <span class="material-symbols-outlined">
-          add
-        </span>
+      <button id="carregarMaisBotao" class="hidden width-100" onclick="carregarMais()">
+        Carregar mais
       </button>
     </footer>
   </article>
 
+  <!-- MODAIS -->
   <div id="modalAdicionarFavorito" class="modal hidden">
     <section id="searchFormContainer" class="formContainer">
       <header class="flex flex-row align-items-center space-between">
@@ -74,6 +73,7 @@
       </form>
     </section>
   </div>
+  <!-- /MODAIS -->
 
   <button id="adicionarFavoritoBotao" title="Adicionar favorito" onclick="alternarModal('modalAdicionarFavorito')">
     <span class="material-symbols-outlined">

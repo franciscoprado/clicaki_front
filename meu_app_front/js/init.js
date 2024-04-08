@@ -50,14 +50,23 @@ const alternarModal = (modalId) => {
   --------------------------------------------------------------------------------------
 */
 const carregarFavoritos = () => {
+  const carregarMaisBotao = document.querySelector("#carregarMaisBotao");
+
   limparAba();
   fetch(`${URL}/favoritos`)
     .then((response) => response.json())
     .then((json) => {
-      paginasTotal = json["total_paginas"];
+      paginaAtual = 1;
+      paginasTotal = json["paginas_total"] ?? 1;
       json["favoritos"].forEach((favorito) => {
-        exibirFavorito(favorito);
+        inserirFavorito(favorito);
       });
+
+      if (paginasTotal > paginaAtual) {
+        carregarMaisBotao.classList.remove("hidden");
+      } else {
+        carregarMaisBotao.classList.add("hidden");
+      }
     })
     .catch((error) => {
       console.log(error);
@@ -92,7 +101,7 @@ const limparAba = () => {
     Função para inserir um favorito na lista
     --------------------------------------------------------------------------------------
   */
-const exibirFavorito = (favorito, deleteBotao = false) => {
+const inserirFavorito = (favorito) => {
   const abaConteudo = document.querySelector("#abaConteudo");
   const favoritoCard = document.createElement("li");
   const favoritoData = document.createElement("time");
@@ -114,15 +123,13 @@ const exibirFavorito = (favorito, deleteBotao = false) => {
   favoritoCard.classList.add("card");
   abaConteudo.appendChild(favoritoCard);
 
-  if (deleteBotao) {
-    favoritoDelete.setAttribute("href", "javascript: void(0)");
-    favoritoDelete.setAttribute(
-      "onclick",
-      `removerFavorito(event, ${favorito.id})`
-    );
-    favoritoDelete.innerHTML = `<small>remover</small>`;
-    favoritoCard.appendChild(favoritoDelete);
-  }
+  favoritoDelete.setAttribute("href", "javascript: void(0)");
+  favoritoDelete.setAttribute(
+    "onclick",
+    `removerFavorito(event, ${favorito.id})`
+  );
+  favoritoDelete.innerHTML = `<small>remover</small>`;
+  favoritoCard.appendChild(favoritoDelete);
 };
 
 /*
@@ -140,6 +147,7 @@ const removerFavorito = (event, favoritoId) => {
       response.json().then((json) => {
         alert("Favorito removido com sucesso!");
         card.remove();
+        carregarFavoritos();
       });
     })
     .catch((error) => {
@@ -167,7 +175,7 @@ const carregarMais = () => {
       }
 
       json["favoritos"].forEach((favorito) => {
-        exibirFavorito(favorito);
+        inserirFavorito(favorito);
       });
     })
     .catch((error) => {
