@@ -30,6 +30,16 @@ a:focus {
   transition: color 0.2s;
 }
 
+.danger {
+  color: rgb(201, 0, 0);
+}
+
+.danger:hover,
+.danger:focus {
+  color: rgb(255, 103, 103);
+  transition: color 0.2s;
+}
+
 input,
 textarea {
   font-family: "Ubuntu", sans-serif;

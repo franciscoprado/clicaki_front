@@ -104,32 +104,65 @@ const limparAba = () => {
 const inserirFavorito = (favorito) => {
   const abaConteudo = document.querySelector("#abaConteudo");
   const favoritoCard = document.createElement("li");
-  const favoritoData = document.createElement("time");
   const favoritoLink = document.createElement("a");
-  const favoritoDelete = document.createElement("a");
   const favoritoTitulo = document.createElement("h3");
-  const dataInsercao = new Date(favorito.data_insercao);
+  const favoritoHeader = document.createElement("header");
+  const favoritoFooter = document.createElement("footer");
+  const favoritoData = document.createElement("time");
+  const favoritoDataInsercao = new Date(favorito.data_insercao);
+  const favoritoRemover = document.createElement("a");
+  const favoritosCurtidas = document.createElement("a");
 
   favoritoLink.textContent = favorito.titulo;
   favoritoLink.setAttribute("href", "javascript: void(0);");
   favoritoLink.setAttribute("onclick", `abrirFavorito(${favorito.id});`);
   favoritoLink.setAttribute("title", favorito.url);
-  favoritoData.textContent = `adicionado em ${dataInsercao.toLocaleDateString()}`;
-  favoritoData.setAttribute("datetime", dataInsercao.toISOString());
 
-  favoritoTitulo.appendChild(favoritoLink);
-  favoritoCard.appendChild(favoritoTitulo);
-  favoritoCard.appendChild(favoritoData);
-  favoritoCard.classList.add("card");
-  abaConteudo.appendChild(favoritoCard);
+  favoritoData.textContent = `adicionado em ${favoritoDataInsercao.toLocaleDateString()}`;
+  favoritoData.setAttribute("datetime", favoritoDataInsercao.toISOString());
 
-  favoritoDelete.setAttribute("href", "javascript: void(0)");
-  favoritoDelete.setAttribute(
+  favoritoRemover.setAttribute("href", "javascript: void(0)");
+  favoritoRemover.setAttribute("title", "Excluir favorito");
+  favoritoRemover.setAttribute(
     "onclick",
     `removerFavorito(event, ${favorito.id})`
   );
-  favoritoDelete.innerHTML = `<small>remover</small>`;
-  favoritoCard.appendChild(favoritoDelete);
+  favoritoRemover.innerHTML = `<span class="material-symbols-outlined">delete</span>`;
+  favoritoRemover.classList.add("danger");
+
+  favoritosCurtidas.setAttribute("href", "javascript: void(0)");
+  favoritosCurtidas.setAttribute(
+    "onclick",
+    `curtirFavorito(event, ${favorito.id})`
+  );
+  favoritosCurtidas.setAttribute("title", "Curtir favorito");
+  favoritosCurtidas.innerHTML += `<span class="material-symbols-outlined">thumb_up</span>`;
+  favoritosCurtidas.innerHTML += `&nbsp;<span class="curtidas">${favorito.curtidas}`;
+
+  favoritoTitulo.appendChild(favoritoLink);
+  favoritoHeader.appendChild(favoritoTitulo);
+  favoritoFooter.appendChild(favoritoData);
+  favoritoFooter.appendChild(favoritoRemover);
+  favoritoFooter.appendChild(favoritosCurtidas);
+  favoritoCard.appendChild(favoritoHeader);
+  favoritoCard.appendChild(favoritoFooter);
+  abaConteudo.appendChild(favoritoCard);
+  favoritoCard.classList.add("card");
+};
+
+const curtirFavorito = (event, favoritoId) => {
+  const curtidasSpan = event.currentTarget.querySelector(".curtidas");
+
+  fetch(`${URL}/favorito/curtir?id=${favoritoId}`, {
+    method: "put",
+  })
+    .then((response) => response.json())
+    .then((json) => {
+      curtidasSpan.textContent = json["curtidas"];
+    })
+    .catch((error) => {
+      console.log(error);
+    });
 };
 
 /*
@@ -145,7 +178,9 @@ const abrirFavorito = (favoritoId) => {
     .then((response) => {
       response.json().then((json) => {
         alternarModal("modalFavoritoDetalhe");
-        favoritoDescricao.innerHTML = json["descricao"] ? json["descricao"] : "Sem descrição.";
+        favoritoDescricao.innerHTML = json["descricao"]
+          ? json["descricao"]
+          : "Sem descrição.";
         favoritoUrl.innerHTML = json["url"];
         favoritoUrl.setAttribute("href", json["url"]);
       });
