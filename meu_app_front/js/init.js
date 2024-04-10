@@ -55,23 +55,29 @@ const carregarFavoritos = () => {
   limparAba();
   fetch(`${URL}/favoritos`)
     .then((response) => response.json())
-    .then((json) => {
-      paginaAtual = 1;
-      paginasTotal = json["paginas_total"] ?? 1;
-      json["favoritos"].forEach((favorito) => {
-        inserirFavorito(favorito);
-      });
-
-      if (paginasTotal > paginaAtual) {
-        carregarMaisBotao.classList.remove("hidden");
-      } else {
-        carregarMaisBotao.classList.add("hidden");
-      }
-    })
+    .then((json) => exibirFavoritos(json))
     .catch((error) => {
-      console.log(error);
       exibirMensagemSemFavoritos();
     });
+};
+
+/*
+  --------------------------------------------------------------------------------------
+  Função que pega um retorno JSON e itera sobre ele, inserindo os ards na tela
+  --------------------------------------------------------------------------------------
+*/
+const exibirFavoritos = (json) => {
+  paginaAtual = 1;
+  paginasTotal = json ? json["paginas_total"] : 1;
+  json["favoritos"].forEach((favorito) => {
+    inserirFavorito(favorito);
+  });
+
+  if (paginasTotal > paginaAtual) {
+    carregarMaisBotao.classList.remove("hidden");
+  } else {
+    carregarMaisBotao.classList.add("hidden");
+  }
 };
 
 /*
@@ -121,20 +127,14 @@ const inserirFavorito = (favorito) => {
   favoritoData.textContent = `adicionado em ${favoritoDataInsercao.toLocaleDateString()}`;
   favoritoData.setAttribute("datetime", favoritoDataInsercao.toISOString());
 
-  favoritoRemover.setAttribute("href", "javascript: void(0)");
+  favoritoRemover.setAttribute("href", `#${favorito.id}`);
   favoritoRemover.setAttribute("title", "Excluir favorito");
-  favoritoRemover.setAttribute(
-    "onclick",
-    `removerFavorito(event, ${favorito.id})`
-  );
+  favoritoRemover.setAttribute("onclick", `removerFavorito(event)`);
   favoritoRemover.innerHTML = `<span class="material-symbols-outlined">delete</span>`;
   favoritoRemover.classList.add("danger");
 
-  favoritosCurtidas.setAttribute("href", "javascript: void(0)");
-  favoritosCurtidas.setAttribute(
-    "onclick",
-    `curtirFavorito(event, ${favorito.id})`
-  );
+  favoritosCurtidas.setAttribute("href", `#${favorito.id}`);
+  favoritosCurtidas.setAttribute("onclick", `curtirFavorito(event)`);
   favoritosCurtidas.setAttribute("title", "Curtir favorito");
   favoritosCurtidas.innerHTML += `<span class="material-symbols-outlined">thumb_up</span>`;
   favoritosCurtidas.innerHTML += `&nbsp;<span class="curtidas">${favorito.curtidas}`;
@@ -150,9 +150,12 @@ const inserirFavorito = (favorito) => {
   favoritoCard.classList.add("card");
 };
 
-const curtirFavorito = (event, favoritoId) => {
-  const curtidasSpan = event.currentTarget.querySelector(".curtidas");
+const curtirFavorito = (event) => {
+  const link = event.currentTarget;
+  const curtidasSpan = link.querySelector(".curtidas");
+  const favoritoId = link.getAttribute("href").replace("#", "");
 
+  event.preventDefault();
   fetch(`${URL}/favorito/curtir?id=${favoritoId}`, {
     method: "put",
   })
@@ -161,7 +164,7 @@ const curtirFavorito = (event, favoritoId) => {
       curtidasSpan.textContent = json["curtidas"];
     })
     .catch((error) => {
-      console.log(error);
+      console.error(error);
     });
 };
 
@@ -186,7 +189,7 @@ const abrirFavorito = (favoritoId) => {
       });
     })
     .catch((error) => {
-      console.log(error);
+      console.error(error);
     });
 };
 
@@ -195,21 +198,22 @@ const abrirFavorito = (favoritoId) => {
     Função para remover um favorito do usuário
     --------------------------------------------------------------------------------------
   */
-const removerFavorito = (event, favoritoId) => {
-  const card = event.target.parentElement.parentElement;
+const removerFavorito = (event) => {
+  const link = event.target.parentElement;
+  const card = link.parentElement;
+  const favoritoId = link.getAttribute("href").replace("#", "");
 
+  event.preventDefault();
   fetch(`${URL}/favorito?id=${favoritoId}`, {
     method: "delete",
   })
     .then((response) => {
-      response.json().then((json) => {
-        alert("Favorito removido com sucesso!");
-        card.remove();
-        carregarFavoritos();
-      });
+      alert("Favorito removido com sucesso!");
+      card.remove();
+      carregarFavoritos();
     })
     .catch((error) => {
-      console.log(error);
+      console.error(error);
     });
 };
 
@@ -237,7 +241,7 @@ const carregarMais = () => {
       });
     })
     .catch((error) => {
-      console.log(error);
+      console.error(error);
       exibirMensagemSemFavoritos();
     });
 };
