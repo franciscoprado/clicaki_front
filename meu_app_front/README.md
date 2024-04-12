@@ -1,8 +1,6 @@
-# Meu Front
+# Clicaki - Front
 
-Este pequeno projeto faz parte do material diático da Disciplina **Desenvolvimento Full Stack Básico** 
-
-O objetivo aqui é ilutsrar o conteúdo apresentado na terceira aula.
+Projeto frontend relacioando a API do Clicaki, que permite que um usuário cadastre links como favoritos, além de removê-los e acessá-los.
 
 ---
 ## Como executar

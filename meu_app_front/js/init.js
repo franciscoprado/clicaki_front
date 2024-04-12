@@ -14,7 +14,7 @@ let paginasTotal = 0;
   Função para submeter o formulário e cadastrar favorito
   --------------------------------------------------------------------------------------
 */
-const enviarFavorito = (e) => {
+const enviarFavorito = async (e) => {
   const form = document.forms["adicionarFavoritoForm"];
 
   e.preventDefault();
@@ -40,6 +40,7 @@ const enviarFavorito = (e) => {
 const alternarModal = (modalId) => {
   const modal = document.querySelector(`#${modalId}`);
   const form = document.forms["adicionarFavoritoForm"];
+
   modal.classList.toggle("hidden");
   form.reset();
 };
@@ -49,13 +50,14 @@ const alternarModal = (modalId) => {
   Função para carregar os favoritos adicionados mais recentemente
   --------------------------------------------------------------------------------------
 */
-const carregarFavoritos = () => {
-  const carregarMaisBotao = document.querySelector("#carregarMaisBotao");
-
+const carregarFavoritos = async () => {
   limparAba();
   fetch(`${URL}/favoritos`)
     .then((response) => response.json())
-    .then((json) => exibirFavoritos(json))
+    .then((json) => {
+      paginaAtual = 1;
+      exibirFavoritos(json);
+    })
     .catch((error) => {
       exibirMensagemSemFavoritos();
     });
@@ -67,9 +69,10 @@ const carregarFavoritos = () => {
   --------------------------------------------------------------------------------------
 */
 const exibirFavoritos = (json) => {
-  paginaAtual = 1;
-  paginasTotal = json ? json["paginas_total"] : 1;
-  json["favoritos"].forEach((favorito) => {
+  const favoritos = json["favoritos"];
+  paginasTotal = json["paginas_total"] ? json["paginas_total"] : 1;
+
+  favoritos.forEach((favorito) => {
     inserirFavorito(favorito);
   });
 
@@ -87,6 +90,7 @@ const exibirFavoritos = (json) => {
   */
 const exibirMensagemSemFavoritos = () => {
   const abaConteudo = document.querySelector("#abaConteudo");
+
   abaConteudo.innerHTML = `<p><strong>Nenhum favorito ainda... ¬¬</strong>`;
   abaConteudo.innerHTML += `Adicione um clicando no botão de "+" no canto direito!</p>`;
 };
@@ -150,7 +154,12 @@ const inserirFavorito = (favorito) => {
   favoritoCard.classList.add("card");
 };
 
-const curtirFavorito = (event) => {
+/*
+    --------------------------------------------------------------------------------------
+    Função para adicionar mais um curtir ao favorito
+    --------------------------------------------------------------------------------------
+  */
+const curtirFavorito = async (event) => {
   const link = event.currentTarget;
   const curtidasSpan = link.querySelector(".curtidas");
   const favoritoId = link.getAttribute("href").replace("#", "");
@@ -173,20 +182,19 @@ const curtirFavorito = (event) => {
     Função para abrir detalhes do favorito.
     --------------------------------------------------------------------------------------
   */
-const abrirFavorito = (favoritoId) => {
+const abrirFavorito = async (favoritoId) => {
   const favoritoUrl = document.querySelector("#favoritoUrl");
   const favoritoDescricao = document.querySelector("#favoritoDescricao");
 
   fetch(`${URL}/favorito?id=${favoritoId}`)
-    .then((response) => {
-      response.json().then((json) => {
-        alternarModal("modalFavoritoDetalhe");
-        favoritoDescricao.innerHTML = json["descricao"]
-          ? json["descricao"]
-          : "Sem descrição.";
-        favoritoUrl.innerHTML = json["url"];
-        favoritoUrl.setAttribute("href", json["url"]);
-      });
+    .then((response) => response.json())
+    .then((json) => {
+      alternarModal("modalFavoritoDetalhe");
+      favoritoDescricao.innerHTML = json["descricao"]
+        ? json["descricao"]
+        : "Sem descrição.";
+      favoritoUrl.innerHTML = json["url"];
+      favoritoUrl.setAttribute("href", json["url"]);
     })
     .catch((error) => {
       console.error(error);
@@ -198,7 +206,7 @@ const abrirFavorito = (favoritoId) => {
     Função para remover um favorito do usuário
     --------------------------------------------------------------------------------------
   */
-const removerFavorito = (event) => {
+const removerFavorito = async (event) => {
   const link = event.target.parentElement;
   const card = link.parentElement;
   const favoritoId = link.getAttribute("href").replace("#", "");
@@ -222,24 +230,12 @@ const removerFavorito = (event) => {
   Função para carregar mais favoritos e adicioná-los ao final
   --------------------------------------------------------------------------------------
 */
-const carregarMais = () => {
-  const carregarMaisBotao = document.querySelector("#carregarMaisBotao");
-
+const carregarMais = async () => {
   paginaAtual += 1;
 
   fetch(`${URL}/favoritos?pagina=${paginaAtual}`)
     .then((response) => response.json())
-    .then((json) => {
-      paginasTotal = json["paginas_total"] ?? 1;
-
-      if (paginasTotal === paginaAtual) {
-        carregarMaisBotao.classList.add("hidden");
-      }
-
-      json["favoritos"].forEach((favorito) => {
-        inserirFavorito(favorito);
-      });
-    })
+    .then((json) => exibirFavoritos(json))
     .catch((error) => {
       console.error(error);
       exibirMensagemSemFavoritos();
@@ -255,5 +251,3 @@ const iniciar = () => {
   console.log("Inicializando app...");
   carregarFavoritos();
 };
-
-iniciar();
