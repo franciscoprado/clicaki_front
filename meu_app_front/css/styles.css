@@ -115,7 +115,7 @@
   padding: 0;
 }
 
-#abas #abaConteudo .card {
+#abas #abaConteudo li {
   display: flex;
   flex-direction: column;
   justify-content: flex-start;
@@ -125,7 +125,7 @@
   margin-bottom: 10px;
 }
 
-#abas #abaConteudo .card h3 {
+#abas #abaConteudo li h3 {
   width: 100%;
   margin: 0 0 8px;
   overflow: hidden;
@@ -133,22 +133,22 @@
   text-overflow: ellipsis;
 }
 
-#abas #abaConteudo .card time {
+#abas #abaConteudo li time {
   font-style: italic;
   color: #888888;
 }
 
-#abas #abaConteudo .card footer {
+#abas #abaConteudo li footer {
   display: flex;
 }
 
-#abas #abaConteudo .card footer a {
+#abas #abaConteudo li footer a {
   border-left: solid 1px #888888;
   margin-left: 8px;
   padding-left: 8px;
 }
 
-#abas #abaConteudo .card footer > * {
+#abas #abaConteudo li footer > * {
   display: flex;
   align-items: center;
   align-content: center;
