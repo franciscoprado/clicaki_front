@@ -4,10 +4,7 @@
   --------------------------------------------------------------------------------------
 */
 const URL = "http://127.0.0.1:5000";
-let modoLogin = true;
-let abaAtiva = "ultimosAdicionados";
 let paginaAtual = 1;
-let paginasTotal = 0;
 
 /*
   --------------------------------------------------------------------------------------
@@ -69,8 +66,8 @@ const carregarFavoritos = async () => {
   --------------------------------------------------------------------------------------
 */
 const exibirFavoritos = (json) => {
-  const favoritos = json["favoritos"];
-  paginasTotal = json["paginas_total"] ? json["paginas_total"] : 1;
+  const favoritos = json["favoritos"] ?? [];
+  const paginasTotal = json["paginas_total"] ?? 1;
 
   favoritos.forEach((favorito) => {
     inserirFavorito(favorito);
@@ -78,9 +75,10 @@ const exibirFavoritos = (json) => {
 
   if (paginasTotal > paginaAtual) {
     carregarMaisBotao.classList.remove("hidden");
-  } else {
-    carregarMaisBotao.classList.add("hidden");
+    return;
   }
+
+  carregarMaisBotao.classList.add("hidden");
 };
 
 /*
@@ -108,50 +106,14 @@ const limparAba = () => {
 
 /*
     --------------------------------------------------------------------------------------
-    Função para inserir um favorito na lista
+    Função para gerar o código HTML e inseri-lo como um favorito na lista
     --------------------------------------------------------------------------------------
   */
 const inserirFavorito = (favorito) => {
   const abaConteudo = document.querySelector("#abaConteudo");
-  const favoritoCard = document.createElement("li");
-  const favoritoLink = document.createElement("a");
-  const favoritoTitulo = document.createElement("h3");
-  const favoritoHeader = document.createElement("header");
-  const favoritoFooter = document.createElement("footer");
-  const favoritoData = document.createElement("time");
-  const favoritoDataInsercao = new Date(favorito.data_insercao);
-  const favoritoRemover = document.createElement("a");
-  const favoritosCurtidas = document.createElement("a");
-
-  favoritoLink.textContent = favorito.titulo;
-  favoritoLink.setAttribute("href", "javascript: void(0);");
-  favoritoLink.setAttribute("onclick", `abrirFavorito(${favorito.id});`);
-  favoritoLink.setAttribute("title", favorito.url);
-
-  favoritoData.textContent = `adicionado em ${favoritoDataInsercao.toLocaleDateString()}`;
-  favoritoData.setAttribute("datetime", favoritoDataInsercao.toISOString());
-
-  favoritoRemover.setAttribute("href", `#${favorito.id}`);
-  favoritoRemover.setAttribute("title", "Excluir favorito");
-  favoritoRemover.setAttribute("onclick", `removerFavorito(event)`);
-  favoritoRemover.innerHTML = `<span class="material-symbols-outlined">delete</span>`;
-  favoritoRemover.classList.add("danger");
-
-  favoritosCurtidas.setAttribute("href", `#${favorito.id}`);
-  favoritosCurtidas.setAttribute("onclick", `curtirFavorito(event)`);
-  favoritosCurtidas.setAttribute("title", "Curtir favorito");
-  favoritosCurtidas.innerHTML += `<span class="material-symbols-outlined">thumb_up</span>`;
-  favoritosCurtidas.innerHTML += `&nbsp;<span class="curtidas">${favorito.curtidas}`;
-
-  favoritoTitulo.appendChild(favoritoLink);
-  favoritoHeader.appendChild(favoritoTitulo);
-  favoritoFooter.appendChild(favoritoData);
-  favoritoFooter.appendChild(favoritoRemover);
-  favoritoFooter.appendChild(favoritosCurtidas);
-  favoritoCard.appendChild(favoritoHeader);
-  favoritoCard.appendChild(favoritoFooter);
-  abaConteudo.appendChild(favoritoCard);
-  favoritoCard.classList.add("card");
+  const card = new Card(favorito);
+  
+  abaConteudo.appendChild(card.gerarCard());
 };
 
 /*
@@ -190,9 +152,7 @@ const abrirFavorito = async (favoritoId) => {
     .then((response) => response.json())
     .then((json) => {
       alternarModal("modalFavoritoDetalhe");
-      favoritoDescricao.innerHTML = json["descricao"]
-        ? json["descricao"]
-        : "Sem descrição.";
+      favoritoDescricao.innerHTML = json["descricao"];
       favoritoUrl.innerHTML = json["url"];
       favoritoUrl.setAttribute("href", json["url"]);
     })

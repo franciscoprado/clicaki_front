@@ -49,6 +49,12 @@
     </footer>
   </article>
 
+  <button id="adicionarFavoritoBotao" title="Adicionar favorito" onclick="alternarModal('modalAdicionarFavorito')">
+    <span class="material-symbols-outlined">
+      add
+    </span>
+  </button>
+
   <!-- MODAIS -->
   <div id="modalAdicionarFavorito" class="modal hidden">
     <section id="searchFormContainer" class="formContainer">
@@ -62,7 +68,6 @@
         <p>
           <input type="url" name="url" placeholder="https://www.seulink.com" required />
         </p>
-        <hr>
         <p>
           <input type="text" name="titulo" placeholder="Título do link" required />
         </p>
@@ -92,12 +97,7 @@
   </div>
   <!-- /MODAIS -->
 
-  <button id="adicionarFavoritoBotao" title="Adicionar favorito" onclick="alternarModal('modalAdicionarFavorito')">
-    <span class="material-symbols-outlined">
-      add
-    </span>
-  </button>
-
+  <script src="js/componentes.js"></script>
   <script src="js/init.js"></script>
 </body>
 
