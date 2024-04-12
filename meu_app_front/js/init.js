@@ -113,7 +113,6 @@ const limparAba = () => {
 const inserirFavorito = (favorito) => {
   const abaConteudo = document.querySelector("#abaConteudo");
   const card = new Card(favorito);
-
   abaConteudo.appendChild(card.gerarCard());
 };
 
