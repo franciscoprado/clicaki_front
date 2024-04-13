@@ -1,8 +1,7 @@
-/*
-  --------------------------------------------------------------------------------------
-  Classe para auxiliar a geração de cards com informações do favorito.
-  --------------------------------------------------------------------------------------
-*/
+/**
+ * Classe para auxiliar a geração de cards com informações do favorito.
+ * @class
+ */
 class Card {
   #favorito;
   #favoritoCard;
@@ -14,6 +13,10 @@ class Card {
   #favoritoRemover;
   #favoritosCurtidas;
 
+  /**
+   * Classe para auxiliar a geração de cards com informações do favorito.
+   * @class
+   */
   constructor(favorito) {
     this.#favorito = favorito;
     this.#favoritoCard = document.createElement("li");
@@ -26,6 +29,9 @@ class Card {
     this.#favoritosCurtidas = document.createElement("a");
   }
 
+  /**
+   * Cria o elemento de âncora do favorito.
+   */
   #gerarFavoritoLink() {
     this.#favoritoLink.textContent = this.#favorito.titulo;
     this.#favoritoLink.setAttribute("href", "javascript: void(0);");
@@ -36,6 +42,9 @@ class Card {
     this.#favoritoLink.setAttribute("title", this.#favorito.url);
   }
 
+  /**
+   * Cria o elemento contendo a data de inserção do favorito.
+   */
   #gerarFavoritoData() {
     const data = new Date(this.#favorito.data_insercao);
 
@@ -43,6 +52,9 @@ class Card {
     this.#favoritoData.setAttribute("datetime", data.toISOString());
   }
 
+  /**
+   * Cria o botão de remover favorito.
+   */
   #gerarFavoritoRemover() {
     this.#favoritoRemover.setAttribute("href", `#${this.#favorito.id}`);
     this.#favoritoRemover.setAttribute("title", "Excluir favorito");
@@ -51,6 +63,9 @@ class Card {
     this.#favoritoRemover.classList.add("danger");
   }
 
+  /**
+   * Cria o botão de curtir o favorito.
+   */
   #gerarFavoritoCurtidas() {
     this.#favoritosCurtidas.setAttribute("href", `#${this.#favorito.id}`);
     this.#favoritosCurtidas.setAttribute("onclick", `curtirFavorito(event)`);
@@ -61,6 +76,9 @@ class Card {
     }`;
   }
 
+  /**
+   * Monta o elemento, adicionando os elementos-filhos a seus pais.
+   */
   #montarElemento() {
     this.#favoritoTitulo.appendChild(this.#favoritoLink);
     this.#favoritoHeader.appendChild(this.#favoritoTitulo);
@@ -71,6 +89,10 @@ class Card {
     this.#favoritoCard.appendChild(this.#favoritoFooter);
   }
 
+  /**
+   * Gera o HTML do card.
+   * @returns HTMLLIElement
+   */
   gerarCard() {
     this.#gerarFavoritoLink();
     this.#gerarFavoritoData();

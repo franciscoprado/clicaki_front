@@ -6,15 +6,14 @@
 const URL = "http://127.0.0.1:5000";
 let paginaAtual = 1;
 
-/*
-  --------------------------------------------------------------------------------------
-  Função para submeter o formulário e cadastrar favorito
-  --------------------------------------------------------------------------------------
-*/
-const enviarFavorito = async (e) => {
+/**
+ * Função para submeter o formulário e cadastrar favorito.
+ * @param {Event} evento - O evento.
+ */
+const enviarFavorito = async (evento) => {
   const form = document.forms["adicionarFavoritoForm"];
 
-  e.preventDefault();
+  evento.preventDefault();
   fetch(`${URL}/favorito`, {
     method: "post",
     body: new FormData(form),
@@ -29,11 +28,10 @@ const enviarFavorito = async (e) => {
     });
 };
 
-/*
-    --------------------------------------------------------------------------------------
-    Função para fechar/abrir a modal de login
-    --------------------------------------------------------------------------------------
-  */
+/**
+ * Função para fechar/abrir a modal de login.
+ * @param {string} modalId - O atributo id do elemento.
+ */
 const alternarModal = (modalId) => {
   const modal = document.querySelector(`#${modalId}`);
   const form = document.forms["adicionarFavoritoForm"];
@@ -42,11 +40,9 @@ const alternarModal = (modalId) => {
   form.reset();
 };
 
-/*
-  --------------------------------------------------------------------------------------
-  Função para carregar os favoritos adicionados mais recentemente
-  --------------------------------------------------------------------------------------
-*/
+/**
+ * Função para carregar os favoritos adicionados mais recentemente.
+ */
 const carregarFavoritos = async () => {
   limparAba();
   fetch(`${URL}/favoritos`)
@@ -60,11 +56,11 @@ const carregarFavoritos = async () => {
     });
 };
 
-/*
-  --------------------------------------------------------------------------------------
-  Função que pega um retorno JSON e itera sobre ele, inserindo os ards na tela
-  --------------------------------------------------------------------------------------
-*/
+/**
+ * Função que pega um retorno JSON e itera sobre ele, inserindo os ards na tela.
+ * @param {Object} json - O JSON contendo os dados.
+ * @returns
+ */
 const exibirFavoritos = (json) => {
   const carregarMaisBotao = document.querySelector("#carregarMaisBotao");
   const favoritos = json["favoritos"] ?? [];
@@ -82,11 +78,9 @@ const exibirFavoritos = (json) => {
   carregarMaisBotao.classList.add("hidden");
 };
 
-/*
-    --------------------------------------------------------------------------------------
-    Função para exibir uma mensagem de que não há nenhum favorito
-    --------------------------------------------------------------------------------------
-  */
+/**
+ * Função para exibir uma mensagem de que não há nenhum favorito.
+ */
 const exibirMensagemSemFavoritos = () => {
   const abaConteudo = document.querySelector("#abaConteudo");
 
@@ -94,22 +88,19 @@ const exibirMensagemSemFavoritos = () => {
   abaConteudo.innerHTML += `Adicione um clicando no botão de "+" no canto direito!</p>`;
 };
 
-/*
-    --------------------------------------------------------------------------------------
-    Função para limpar as abas de conteúdo anterior.
-    --------------------------------------------------------------------------------------
-  */
+/**
+ * Função para limpar as abas de conteúdo anterior.
+ */
 const limparAba = () => {
   const abaConteudo = document.querySelector("#abaConteudo");
 
   abaConteudo.innerHTML = "";
 };
 
-/*
-    --------------------------------------------------------------------------------------
-    Função para gerar o código HTML e inseri-lo como um favorito na lista
-    --------------------------------------------------------------------------------------
-  */
+/**
+ * Função para gerar o código HTML e inseri-lo como um favorito na lista.
+ * @param {Object} favorito - O favorito.
+ */
 const inserirFavorito = (favorito) => {
   const abaConteudo = document.querySelector("#abaConteudo");
   const card = new Card(favorito);
@@ -117,17 +108,16 @@ const inserirFavorito = (favorito) => {
   abaConteudo.appendChild(card.gerarCard());
 };
 
-/*
-    --------------------------------------------------------------------------------------
-    Função para adicionar mais um curtir ao favorito
-    --------------------------------------------------------------------------------------
-  */
-const curtirFavorito = async (event) => {
-  const link = event.currentTarget;
+/**
+ * Função para adicionar mais um curtir ao favorito.
+ * @param {Event} evento - O evento.
+ */
+const curtirFavorito = async (evento) => {
+  const link = evento.currentTarget;
   const curtidasSpan = link.querySelector(".curtidas");
   const favoritoId = link.getAttribute("href").replace("#", "");
 
-  event.preventDefault();
+  evento.preventDefault();
   fetch(`${URL}/favorito/curtir?id=${favoritoId}`, {
     method: "put",
   })
@@ -140,11 +130,10 @@ const curtirFavorito = async (event) => {
     });
 };
 
-/*
-    --------------------------------------------------------------------------------------
-    Função para abrir detalhes do favorito.
-    --------------------------------------------------------------------------------------
-  */
+/**
+ * Função para abrir detalhes do favorito.
+ * @param {string} favoritoId - O atributo id do elemento.
+ */
 const abrirFavorito = async (favoritoId) => {
   const favoritoUrl = document.querySelector("#favoritoUrl");
   const favoritoDescricao = document.querySelector("#favoritoDescricao");
@@ -162,11 +151,10 @@ const abrirFavorito = async (favoritoId) => {
     });
 };
 
-/*
-    --------------------------------------------------------------------------------------
-    Função para remover um favorito do usuário
-    --------------------------------------------------------------------------------------
-  */
+/**
+ * Função para remover um favorito do usuário.
+ * @param {Event} event - O evento.
+ */
 const removerFavorito = async (event) => {
   const link = event.target.parentElement;
   const card = link.parentElement;
@@ -186,11 +174,9 @@ const removerFavorito = async (event) => {
     });
 };
 
-/*
-  --------------------------------------------------------------------------------------
-  Função para carregar mais favoritos e adicioná-los ao final
-  --------------------------------------------------------------------------------------
-*/
+/**
+ * Função para carregar mais favoritos e adicioná-los ao final.
+ */
 const carregarMais = async () => {
   paginaAtual += 1;
 
@@ -203,11 +189,9 @@ const carregarMais = async () => {
     });
 };
 
-/*
-  --------------------------------------------------------------------------------------
-  Função para iniciar aplicação
-  --------------------------------------------------------------------------------------
-*/
+/**
+ * Função para iniciar aplicação.
+ */
 const iniciar = () => {
   console.log("Inicializando app...");
   carregarFavoritos();
