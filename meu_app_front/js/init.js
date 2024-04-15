@@ -157,7 +157,7 @@ const abrirFavorito = async (favoritoId) => {
  */
 const removerFavorito = async (event) => {
   const link = event.target.parentElement;
-  const card = link.parentElement;
+  const card = link.parentElement.parentElement;
   const favoritoId = link.getAttribute("href").replace("#", "");
 
   event.preventDefault();
